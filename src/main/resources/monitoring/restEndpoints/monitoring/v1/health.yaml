@@ -1,2 +1,2 @@
-class: com.aperto.magkit.monitoring.endpoint.DefaultMonitoringEndpointDefinition
+class: com.aperto.magkit.monitoring.endpoint.ConfiguredMonitoringEndpointDefinition
 implementationClass: com.aperto.magkit.monitoring.endpoint.health.HealthEndpoint
