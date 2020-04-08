@@ -7,7 +7,7 @@ pipeline {
 
     tools {
         maven 'maven360'
-        jdk '8u152'
+        jdk 'openJDK11'
     }
 
     options {
