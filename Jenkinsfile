@@ -68,8 +68,8 @@ pipeline {
                 script {
                     def secrets = [
                       [$class: 'VaultSecret', path: "mobile-engineering/tools/nexus/acid.build",  secretValues: [
-                        [$class: 'VaultSecretValue', envVar: 'NEXUS_PASSWORD', vaultKey: 'password'],
-                        [$class: 'VaultSecretValue', envVar: 'NEXUS_USERNAME', vaultKey: 'username']
+                        [$class: 'VaultSecretValue', envVar: 'DEPLOY_PASSWORD', vaultKey: 'password'],
+                        [$class: 'VaultSecretValue', envVar: 'DEPLOY_USERNAME', vaultKey: 'username']
                       ]]
                     ]
                     wrap([$class: 'VaultBuildWrapper', vaultSecrets: secrets]) {
