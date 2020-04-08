@@ -15,6 +15,11 @@ pipeline {
         buildDiscarder(logRotator(artifactNumToKeepStr: '1', numToKeepStr: '10'))
     }
 
+    environment {
+        MAVEN_VERSION = 'maven360'
+        JDK_VERSION = 'openJDK11'
+    }
+    
     stages {
         stage('Build') {
             when {
@@ -47,6 +52,33 @@ pipeline {
                             deploy: mavenDeploy,
                             params: mavenParams,
                             suppressionsEnabled: false
+                        ])
+                    }
+                }
+            }
+        }
+    
+        stage ('Sonar') {
+            when {
+                anyOf {
+                    branch 'dev'; branch 'PR-*'
+                }
+            }
+            steps {
+                script {
+                    def secrets = [
+                      [$class: 'VaultSecret', path: "mobile-engineering/tools/nexus/acid.build",  secretValues: [
+                        [$class: 'VaultSecretValue', envVar: 'NEXUS_PASSWORD', vaultKey: 'password'],
+                        [$class: 'VaultSecretValue', envVar: 'NEXUS_USERNAME', vaultKey: 'username']
+                      ]]
+                    ]
+                    wrap([$class: 'VaultBuildWrapper', vaultSecrets: secrets]) {
+                        def mavenParams = "-Duser=$DEPLOY_USERNAME -Dpw=$DEPLOY_PASSWORD"
+                        acidExecuteSonar(this, 'magnolia', [
+                          withCoverage:false,
+                          jdk: JDK_VERSION,
+                          maven: MAVEN_VERSION,
+                          additionalMavenParameters: mavenParams
                         ])
                     }
                 }
