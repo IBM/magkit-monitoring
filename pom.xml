@@ -4,7 +4,7 @@
   <groupId>com.aperto.magkit</groupId>
   <artifactId>monitoring</artifactId>
   <version>1.0.0-SNAPSHOT</version>
-  <name>Monitoring</name>
+  <name>Aperto MagKit Monitoring</name>
 
   <properties>
     <source.javaversion>11</source.javaversion>
