@@ -119,10 +119,28 @@
 
   <repositories>
     <repository>
-      <id>aperto.nexus.magnolia</id>
-      <name>aperto.nexus.magnolia</name>
-      <url>https://maven.aperto.de/nexus/content/groups/magnolia/</url>
+      <id>aperto.magkit.group</id>
+      <name>Aperto MagKit Group</name>
+      <url>https://acid-repo.aperto.de/repository/magkit/</url>
     </repository>
   </repositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>aperto.magkit.group</id>
+      <name>Aperto MagKit Group</name>
+      <url>https://acid-repo.aperto.de/repository/magkit/</url>
+    </pluginRepository>
+  </pluginRepositories>
+
+  <distributionManagement>
+    <snapshotRepository>
+      <id>acid.magkit.snapshots</id>
+      <url>https://acid-repo.aperto.de/repository/magkit.snapshots/</url>
+    </snapshotRepository>
+    <repository>
+      <id>acid.magkit.releases</id>
+      <url>https://acid-repo.aperto.de/repository/magkit.releases/</url>
+    </repository>
+  </distributionManagement>
 
 </project>
