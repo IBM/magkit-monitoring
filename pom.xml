@@ -22,6 +22,7 @@
   </properties>
 
   <dependencies>
+   
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
