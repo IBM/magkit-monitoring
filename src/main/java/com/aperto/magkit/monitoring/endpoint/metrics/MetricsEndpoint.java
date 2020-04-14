@@ -22,7 +22,7 @@ import info.magnolia.rest.DynamicPath;
  * 		c) Collection Count for each Garbage Collector
  * 		d) Collection Time for each Garbage Collector
  * 		e) Total Collection Count
- * 		d) Total Collection Time
+ * 		f) Total Collection Time
  * - No. of active threads
  * 
  * Example for endpoint call:
