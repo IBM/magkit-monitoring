@@ -1,7 +1,9 @@
 package com.aperto.magkit.monitoring.endpoint.heap;
 
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.nio.file.Paths;
@@ -14,6 +16,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.LineIterator;
 import org.apache.commons.lang3.StringUtils;
 
 import com.aperto.magkit.monitoring.endpoint.AbstractMonitoringEndpoint;
@@ -43,25 +46,32 @@ public class HeapDumpEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpo
     @Path("")
     @Produces(MediaType.APPLICATION_JSON)
     public String getHeapDump() {
-    	// default heap dump file name
-    	String fileName = "heap_dump";
         // by default dump only the live objects
-    	String heapDumpData = StringUtils.EMPTY;
+    	StringBuffer heapDumpData = new StringBuffer();
         boolean live = true;
         try {
-        	File file = new File(fileName, System.currentTimeMillis() + "-jmap.hprof");
+        	File dir = new File("tmp/heapdump");
+        	dir.mkdirs();
+        	File file = new File(dir, "heap_dump" + System.currentTimeMillis() + "-jmap.hprof");
         	String currentFileName = file.getPath();
         	System.out.println("currentFileName= " + currentFileName);
-        	if (file.exists()) {
-        		file.delete();
-        	}
 			dumpHeap(currentFileName, live);
-			heapDumpData = FileUtils.readFileToString(file, "UTF-8");
+			//heapDumpData = FileUtils.readFileToString(file, "UTF-8");
+			LineIterator it = FileUtils.lineIterator(file, "UTF-16");
+			int counter = 0;
+			try {
+			    while (it.hasNext() && counter <= 1000) {
+			        heapDumpData.append(it.nextLine());
+			        counter++;
+			    }
+			} finally {
+			    LineIterator.closeQuietly(it);
+			}
 			System.out.println("heapDumpData= " + heapDumpData);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-        return heapDumpData;  
+        return heapDumpData.toString();  
     }
     
     public static void dumpHeap(String filePath, boolean live) throws IOException {
