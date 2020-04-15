@@ -1,12 +1,8 @@
 package com.aperto.magkit.monitoring.endpoint.heap;
 
-
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
-import java.nio.file.Paths;
 
 import javax.inject.Inject;
 import javax.management.MBeanServer;
@@ -17,7 +13,6 @@ import javax.ws.rs.core.MediaType;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
-import org.apache.commons.lang3.StringUtils;
 
 import com.aperto.magkit.monitoring.endpoint.AbstractMonitoringEndpoint;
 import com.aperto.magkit.monitoring.endpoint.MonitoringEndpointDefinition;
@@ -37,12 +32,19 @@ import info.magnolia.rest.DynamicPath;
 @DynamicPath
 public class HeapDumpEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpointDefinition> {
 
+	public static final Integer LINE_LIMIT 		= 1000;	
+	public static final String FILE_LOCATION 	= "tmp/heapdump";
+	public static final String FILE_NAME 		= "heap_dump";
+	public static final String FILE_EXTENSION   = "-jmap.hprof";
+	public static final String FILE_ENCODING 	= "UTF-8";
+	
     @Inject
     protected HeapDumpEndpoint(MonitoringEndpointDefinition endpointDefinition) {
         super(endpointDefinition);
     }
 
-    @GET
+    @SuppressWarnings("deprecation")
+	@GET
     @Path("")
     @Produces(MediaType.APPLICATION_JSON)
     public String getHeapDump() {
@@ -50,24 +52,21 @@ public class HeapDumpEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpo
     	StringBuffer heapDumpData = new StringBuffer();
         boolean live = true;
         try {
-        	File dir = new File("tmp/heapdump");
+        	File dir = new File(FILE_LOCATION);
         	dir.mkdirs();
-        	File file = new File(dir, "heap_dump" + System.currentTimeMillis() + "-jmap.hprof");
+        	File file = new File(dir, FILE_NAME + System.currentTimeMillis() + FILE_EXTENSION);
         	String currentFileName = file.getPath();
-        	System.out.println("currentFileName= " + currentFileName);
 			dumpHeap(currentFileName, live);
-			//heapDumpData = FileUtils.readFileToString(file, "UTF-8");
-			LineIterator it = FileUtils.lineIterator(file, "UTF-8");
+			LineIterator it = FileUtils.lineIterator(file, FILE_ENCODING);
 			int counter = 0;
 			try {
-			    while (it.hasNext() && counter <= 1000) {
+			    while (it.hasNext() && counter <= LINE_LIMIT) {
 			        heapDumpData.append(it.nextLine());
 			        counter++;
 			    }
 			} finally {
 			    LineIterator.closeQuietly(it);
 			}
-			System.out.println("heapDumpData= " + heapDumpData);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
