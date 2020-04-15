@@ -38,7 +38,7 @@ public class ThreadDumpEndpoint extends AbstractMonitoringEndpoint<MonitoringEnd
     @Produces(MediaType.APPLICATION_JSON)
     public String getThreadDump() {
     	String threadDump = threadDump(false, false);
-        return threadDump;  //TODO 
+        return threadDump;  
     }
     
     private static String threadDump(boolean lockedMonitors, boolean lockedSynchronizers) {
