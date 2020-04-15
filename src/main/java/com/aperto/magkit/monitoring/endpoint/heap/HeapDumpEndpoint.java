@@ -10,6 +10,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
@@ -43,34 +44,37 @@ public class HeapDumpEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpo
         super(endpointDefinition);
     }
 
-    @SuppressWarnings("deprecation")
 	@GET
     @Path("")
-    @Produces(MediaType.APPLICATION_JSON)
-    public String getHeapDump() {
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    public Response getHeapDump() {
         // by default dump only the live objects
-    	StringBuffer heapDumpData = new StringBuffer();
+    	//StringBuffer heapDumpData = new StringBuffer();
+    	File file = null;
         boolean live = true;
         try {
         	File dir = new File(FILE_LOCATION);
         	dir.mkdirs();
-        	File file = new File(dir, FILE_NAME + System.currentTimeMillis() + FILE_EXTENSION);
+        	file = new File(dir, FILE_NAME + System.currentTimeMillis() + FILE_EXTENSION);
         	String currentFileName = file.getPath();
 			dumpHeap(currentFileName, live);
-			LineIterator it = FileUtils.lineIterator(file, FILE_ENCODING);
-			int counter = 0;
-			try {
-			    while (it.hasNext() && counter <= LINE_LIMIT) {
-			        heapDumpData.append(it.nextLine());
-			        counter++;
-			    }
-			} finally {
-			    LineIterator.closeQuietly(it);
-			}
+//			LineIterator it = FileUtils.lineIterator(file, FILE_ENCODING);
+//			int counter = 0;
+//			try {
+//			    while (it.hasNext() && counter <= LINE_LIMIT) {
+//			        heapDumpData.append(it.nextLine());
+//			        counter++;
+//			    }
+//			} finally {
+//			    LineIterator.closeQuietly(it);
+//			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-        return heapDumpData.toString();  
+        //return heapDumpData.toString();
+        return Response.ok(file, MediaType.APPLICATION_OCTET_STREAM)
+        	      .header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"" ) //optional
+        	      .build();
     }
     
     public static void dumpHeap(String filePath, boolean live) throws IOException {
