@@ -57,7 +57,7 @@ public class HeapDumpEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpo
         	System.out.println("currentFileName= " + currentFileName);
 			dumpHeap(currentFileName, live);
 			//heapDumpData = FileUtils.readFileToString(file, "UTF-8");
-			LineIterator it = FileUtils.lineIterator(file, "UTF-16");
+			LineIterator it = FileUtils.lineIterator(file, "UTF-8");
 			int counter = 0;
 			try {
 			    while (it.hasNext() && counter <= 1000) {
