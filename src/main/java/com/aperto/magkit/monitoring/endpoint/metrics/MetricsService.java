@@ -34,6 +34,9 @@ public class MetricsService {
 		metricsInfo.setUsedMemoryMb(BigDecimal.valueOf(usedMemory).setScale(4, RoundingMode.HALF_UP));
 		metricsInfo.setAvailableMemoryMb(BigDecimal.valueOf(availableMemory).setScale(4, RoundingMode.HALF_UP));
 
+		BigDecimal total = metricsInfo.getAvailableMemoryMb().add(metricsInfo.getUsedMemoryMb());
+		metricsInfo.setTotalMemoryMb(total.setScale(4, RoundingMode.HALF_UP));
+
 		// the number of active threads for the current thread
 		int activeThreads = Thread.activeCount();
 

@@ -19,6 +19,9 @@ public class MetricsInfo {
 	// Represented in MB
 	private BigDecimal _availableMemoryMb;
 
+	// Represented in MB
+	private BigDecimal _totalMemoryMb;
+
 	private int _nbActiveThreads;
 
 	private List<GarbageCollectorInfo> _gcInfo = new ArrayList<GarbageCollectorInfo>();
@@ -40,6 +43,14 @@ public class MetricsInfo {
 
 	public void setAvailableMemoryMb(BigDecimal availableMemory) {
 		_availableMemoryMb = availableMemory;
+	}
+
+	public BigDecimal getTotalMemoryMb() {
+		return _totalMemoryMb;
+	}
+
+	public void setTotalMemoryMb(BigDecimal totalMemory) {
+		_totalMemoryMb = totalMemory;
 	}
 
 	public int getNbActiveThreads() {
