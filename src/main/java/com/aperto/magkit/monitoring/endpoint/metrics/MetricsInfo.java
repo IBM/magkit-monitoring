@@ -1,5 +1,6 @@
 package com.aperto.magkit.monitoring.endpoint.metrics;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,10 +16,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class MetricsInfo {
 	// Represented in MB
-	private double _usedMemory;
+	private BigDecimal _usedMemory;
 
 	// Represented in MB
-	private double _availableMemory;
+	private BigDecimal _availableMemory;
 
 	private int _nbActiveThreads;
 
@@ -28,22 +29,22 @@ public class MetricsInfo {
 	private long _totalCollectionTime;
 
 	@JsonProperty(value = "usedMemory (MB)")
-	public double getUsedMemory() {
+	public BigDecimal getUsedMemory() {
 		return _usedMemory;
 	}
 
 	@JsonProperty(value = "usedMemory (MB)")
-	public void setUsedMemory(double usedMemory) {
+	public void setUsedMemory(BigDecimal usedMemory) {
 		_usedMemory = usedMemory;
 	}
 
 	@JsonProperty(value = "availableMemory (MB)")
-	public double getAvailableMemory() {
+	public BigDecimal getAvailableMemory() {
 		return _availableMemory;
 	}
 
 	@JsonProperty(value = "availableMemory (MB)")
-	public void setAvailableMemory(double availableMemory) {
+	public void setAvailableMemory(BigDecimal availableMemory) {
 		_availableMemory = availableMemory;
 	}
 
