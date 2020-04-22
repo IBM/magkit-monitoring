@@ -1,7 +1,5 @@
 package com.aperto.magkit.monitoring.endpoint.metrics;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 /**
  * 
  * The pojo is used to provide Garbage Collector information for the JVM
@@ -41,12 +39,10 @@ public class GarbageCollectorInfo {
 		_collectionCount = collectionCount;
 	}
 
-	@JsonProperty(value = "collectionTime (ms)")
 	public long getCollectionTime() {
 		return _collectionTime;
 	}
 
-	@JsonProperty(value = "collectionTime (ms)")
 	public void setCollectionTime(long collectionTime) {
 		_collectionTime = collectionTime;
 	}

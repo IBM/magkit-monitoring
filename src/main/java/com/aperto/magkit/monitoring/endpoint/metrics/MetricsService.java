@@ -31,8 +31,8 @@ public class MetricsService {
 		double usedMemory = (double) (totalMemory - freeMemory) / MB_SIZE;
 		double availableMemory = (double) maxMemory / MB_SIZE - usedMemory;
 
-		metricsInfo.setUsedMemory(BigDecimal.valueOf(usedMemory).setScale(4, RoundingMode.HALF_UP));
-		metricsInfo.setAvailableMemory(BigDecimal.valueOf(availableMemory).setScale(4, RoundingMode.HALF_UP));
+		metricsInfo.setUsedMemoryMb(BigDecimal.valueOf(usedMemory).setScale(4, RoundingMode.HALF_UP));
+		metricsInfo.setAvailableMemoryMb(BigDecimal.valueOf(availableMemory).setScale(4, RoundingMode.HALF_UP));
 
 		// the number of active threads for the current thread
 		int activeThreads = Thread.activeCount();
