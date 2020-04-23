@@ -17,28 +17,18 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import com.aperto.magkit.monitoring.endpoint.AbstractMonitoringEndpoint;
-import com.aperto.magkit.monitoring.endpoint.ConfiguredMonitoringEndpointDefinition;
-import com.aperto.magkit.monitoring.endpoint.MonitoringEndpointDefinition;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.magnolia.init.MagnoliaConfigurationProperties;
-import info.magnolia.jcr.util.NodeUtil;
-import info.magnolia.rest.DynamicPath;
-
-import java.nio.file.*;
-
-import javax.jcr.Session;
-import javax.jcr.Node;
-import javax.jcr.NodeIterator;
-import javax.jcr.RepositoryException;
+import com.aperto.magkit.monitoring.endpoint.AbstractMonitoringEndpoint;
+import com.aperto.magkit.monitoring.endpoint.MonitoringEndpointDefinition;
 
 import info.magnolia.context.MgnlContext;
-import info.magnolia.context.WebContext;
+import info.magnolia.init.MagnoliaConfigurationProperties;
+import info.magnolia.rest.DynamicPath;
 
 /**
+ * LogsEndpoint.
  * 
  * This endpoint provides a JSON list of existing files in the log folder and
  * also provides the contents of the log file specified as a path parameter.
