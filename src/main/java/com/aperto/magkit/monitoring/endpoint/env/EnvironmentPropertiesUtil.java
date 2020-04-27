@@ -1,5 +1,6 @@
 package com.aperto.magkit.monitoring.endpoint.env;
 
+
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
 import java.util.Enumeration;
@@ -53,4 +54,12 @@ public class EnvironmentPropertiesUtil {
 		}
 		return map;
 	}
+
+	/*
+	 * public static Map<String, String> getMagnoliaProperties() { String
+	 * propFileName = "magnolia.properties"; Properties prop = new Properties();
+	 * InputStream inputStream =
+	 * getClass().getClassLoader().getResourceAsStream(propFileName); if(inputStream
+	 * != null) { prop.load(inputStream); } System.out.println(prop); return null; }
+	 */
 }
