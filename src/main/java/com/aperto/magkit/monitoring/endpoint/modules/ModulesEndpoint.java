@@ -19,9 +19,12 @@ import info.magnolia.context.SystemContext;
 import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.jcr.util.NodeUtil;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * 
- * Modules Pojo.
+ * Modules endpoint
  * 
  * @author Dan Olaru (IBM)
  * @since 2020-04-09
@@ -32,7 +35,7 @@ import info.magnolia.jcr.util.NodeUtil;
 @DynamicPath
 public class ModulesEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpointDefinition> {
 
-	private SystemContext systemContext;
+	private static final Logger LOGGER = LoggerFactory.getLogger(ModulesEndpoint.class);
 
 	@Inject
 	protected ModulesEndpoint(MonitoringEndpointDefinition endpointDefinition) {
@@ -54,8 +57,7 @@ public class ModulesEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpoi
 			childrenOfModules.forEach(c -> registeredModules.addRegisteredModule(c));
 
 		} catch (RepositoryException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.error(e.getMessage());
 		}
 
 		return registeredModules;

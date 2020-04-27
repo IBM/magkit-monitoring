@@ -1,9 +1,8 @@
 package com.aperto.magkit.monitoring.endpoint.metrics;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * 
@@ -15,10 +14,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class MetricsInfo {
 	// Represented in MB
-	private double _usedMemory;
+	private BigDecimal _usedMemoryMb;
 
 	// Represented in MB
-	private double _availableMemory;
+	private BigDecimal _availableMemoryMb;
+
+	// Represented in MB
+	private BigDecimal _totalMemoryMb;
 
 	private int _nbActiveThreads;
 
@@ -27,24 +29,28 @@ public class MetricsInfo {
 	private long _totalCollectionCount;
 	private long _totalCollectionTime;
 
-	@JsonProperty(value = "usedMemory (MB)")
-	public double getUsedMemory() {
-		return _usedMemory;
+	public BigDecimal getUsedMemoryMb() {
+		return _usedMemoryMb;
 	}
 
-	@JsonProperty(value = "usedMemory (MB)")
-	public void setUsedMemory(double usedMemory) {
-		_usedMemory = usedMemory;
+	public void setUsedMemoryMb(BigDecimal usedMemory) {
+		_usedMemoryMb = usedMemory;
 	}
 
-	@JsonProperty(value = "availableMemory (MB)")
-	public double getAvailableMemory() {
-		return _availableMemory;
+	public BigDecimal getAvailableMemoryMb() {
+		return _availableMemoryMb;
 	}
 
-	@JsonProperty(value = "availableMemory (MB)")
-	public void setAvailableMemory(double availableMemory) {
-		_availableMemory = availableMemory;
+	public void setAvailableMemoryMb(BigDecimal availableMemory) {
+		_availableMemoryMb = availableMemory;
+	}
+
+	public BigDecimal getTotalMemoryMb() {
+		return _totalMemoryMb;
+	}
+
+	public void setTotalMemoryMb(BigDecimal totalMemory) {
+		_totalMemoryMb = totalMemory;
 	}
 
 	public int getNbActiveThreads() {
@@ -67,12 +73,10 @@ public class MetricsInfo {
 		_totalCollectionCount = totalCollectionCount;
 	}
 
-	@JsonProperty(value = "totalCollectionTime (ms)")
 	public long getTotalCollectionTime() {
 		return _totalCollectionTime;
 	}
 
-	@JsonProperty(value = "totalCollectionTime (ms)")
 	public void setTotalCollectionTime(long totalCollectionTime) {
 		_totalCollectionTime = totalCollectionTime;
 	}

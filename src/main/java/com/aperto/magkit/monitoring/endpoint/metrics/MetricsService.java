@@ -2,7 +2,8 @@ package com.aperto.magkit.monitoring.endpoint.metrics;
 
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
-import java.text.DecimalFormat;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 /**
  * 
@@ -13,8 +14,6 @@ import java.text.DecimalFormat;
  *
  */
 public class MetricsService {
-	private static final DecimalFormat DECIMAL_FORMATTER = new DecimalFormat("#.00");
-
 	private static final int MB_SIZE = 1024 * 1024;
 
 	public MetricsInfo getInfoMetrics() {
@@ -32,8 +31,11 @@ public class MetricsService {
 		double usedMemory = (double) (totalMemory - freeMemory) / MB_SIZE;
 		double availableMemory = (double) maxMemory / MB_SIZE - usedMemory;
 
-		metricsInfo.setUsedMemory(Double.parseDouble(DECIMAL_FORMATTER.format(usedMemory)));
-		metricsInfo.setAvailableMemory(Double.parseDouble(DECIMAL_FORMATTER.format(availableMemory)));
+		metricsInfo.setUsedMemoryMb(BigDecimal.valueOf(usedMemory).setScale(4, RoundingMode.HALF_UP));
+		metricsInfo.setAvailableMemoryMb(BigDecimal.valueOf(availableMemory).setScale(4, RoundingMode.HALF_UP));
+
+		BigDecimal total = metricsInfo.getAvailableMemoryMb().add(metricsInfo.getUsedMemoryMb());
+		metricsInfo.setTotalMemoryMb(total.setScale(4, RoundingMode.HALF_UP));
 
 		// the number of active threads for the current thread
 		int activeThreads = Thread.activeCount();
