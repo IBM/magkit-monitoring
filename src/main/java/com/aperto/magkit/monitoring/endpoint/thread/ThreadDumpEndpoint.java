@@ -35,7 +35,7 @@ public class ThreadDumpEndpoint extends AbstractMonitoringEndpoint<MonitoringEnd
 
     @GET
     @Path("")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
     public String getThreadDump() {
     	String threadDump = threadDump(false, false);
         return threadDump;  
