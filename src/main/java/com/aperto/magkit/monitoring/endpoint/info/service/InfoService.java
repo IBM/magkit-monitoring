@@ -29,8 +29,7 @@ public class InfoService {
 			Node coreNode = session.getNode("/modules/core");
 			version = coreNode.getProperty("version").getString();
 		} catch (RepositoryException e) {
-			
-			LOGGER.error(e.getMessage());
+			LOGGER.error("Error occurred on getting magnolia version", e);
 		}
     	
     	return version;
@@ -45,8 +44,7 @@ public class InfoService {
 			Node serverNode = session.getNode("/server");
 			version = serverNode.getProperty("admin").getString();
 		} catch (RepositoryException e) {
-			
-			LOGGER.error(e.getMessage());
+			LOGGER.error("Error occurred on getting magnolia instance type", e);
 		}
     	
     	if (version.equals(TRUE)) {
@@ -75,7 +73,7 @@ public class InfoService {
     		jcrRepositoryVersion = JcrUtils.getRepository().getDescriptor(Repository.REP_VERSION_DESC);
     		
 		} catch (RepositoryException e) {
-			LOGGER.error(e.getMessage());
+			LOGGER.error("Error occurred on getting repository description", e);
 		}
     	
     	return jcrRepositoryName + " " + jcrRepositoryVersion;
