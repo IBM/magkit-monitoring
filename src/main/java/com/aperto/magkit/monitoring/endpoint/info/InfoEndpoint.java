@@ -1,35 +1,34 @@
 package com.aperto.magkit.monitoring.endpoint.info;
 
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.inject.Inject;
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.apache.maven.model.Model;
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
-import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.aperto.magkit.monitoring.endpoint.AbstractMonitoringEndpoint;
 import com.aperto.magkit.monitoring.endpoint.MonitoringEndpointDefinition;
+import com.aperto.magkit.monitoring.endpoint.info.pojo.Environment;
+import com.aperto.magkit.monitoring.endpoint.info.pojo.Info;
+import com.aperto.magkit.monitoring.endpoint.info.pojo.License;
+import com.aperto.magkit.monitoring.endpoint.info.pojo.Magnolia;
+import com.aperto.magkit.monitoring.endpoint.info.service.InfoService;
 
 import info.magnolia.cms.pddescriptor.ProductDescriptorExtractor;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.context.WebContext;
-import info.magnolia.repository.DefaultRepositoryManager;
 import info.magnolia.rest.DynamicPath;
 
 /**
  * 
  * Info Endpoint.
  * 
- * @author Claudiu Gonciulea (Aperto - An IBM Company)
+ * @author CLAUDIU GONCIULEA (Aperto - An IBM Company)
  * @since 2020-04-09
  *
  */
@@ -37,92 +36,73 @@ import info.magnolia.rest.DynamicPath;
 @DynamicPath
 public class InfoEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpointDefinition> {
 	
-	ProductDescriptorExtractor pde;
-	DefaultRepositoryManager drm;
+	private static final Logger LOGGER = LoggerFactory.getLogger(InfoEndpoint.class);
+
+	private InfoService infoService;
+	
+	private ProductDescriptorExtractor pde;
 	
 	@Inject
-    protected InfoEndpoint(MonitoringEndpointDefinition endpointDefinition, ProductDescriptorExtractor pde, DefaultRepositoryManager drm) {
-        super(endpointDefinition);
-        this.pde = pde;
-        this.drm = drm;
+    protected InfoEndpoint(MonitoringEndpointDefinition endpointDefinition, ProductDescriptorExtractor pde, InfoService infoService) {
+        
+		super(endpointDefinition);
+        
+		this.infoService = infoService;
+		this.pde = pde;
     }
 
     @GET
     @Path("")
     @Produces(MediaType.APPLICATION_JSON)
-    public Info info() {
+    public Info info() throws IOException {
     	
     	Info info = new Info();
     	
-    	info.setMagnoliaEdition(pde.get(ProductDescriptorExtractor.EDITION));
-    	info.setMagnoliaVersion(getMagnoliaVersion());
-    	info.setMagnoliaContext(getMagnoliaInstanceType());
-    	info.setOperatingSystem(System.getProperty("os.name"));
-    	info.setJavaVersion(System.getProperty("java.vendor") + " " + System.getProperty("java.version"));
-    	info.setApplicationServer(getApplicationServer());
-    	// TODO set _database
-    	info.setRepository(getGitRepository());
+    	Magnolia magnolia = new Magnolia();
+    	License license = new License();
+    	Environment environment = new Environment();
+    	
+    	
+    	magnolia.setEdition(pde.get(ProductDescriptorExtractor.EDITION));
+    	magnolia.setVersion(infoService.getMagnoliaVersion());
+    	magnolia.setInstance(infoService.getMagnoliaInstanceType());
+    	
+    	String LICENSE_FILE_PATH = "info/magnolia/cms/pddescriptor/pddescriptor.xml";
+    	String PLATFORM_COMPONENTS = "/info/magnolia/init/platform-components.xml";
+    	InputStream is = getClass().getClassLoader().getResourceAsStream(PLATFORM_COMPONENTS);
+    	int i;
+    	char c;
+    	
+    	try {
+            System.out.println("pddescriptor.xml printed:");
+            
+            while((i = is.read())!=-1) {
+
+               c = (char)i;
+               System.out.print(c);
+            }
+            
+         } catch(Exception e) {
+            e.printStackTrace();
+         } finally {
+            if(is!=null)
+               is.close();
+         }
+    	
+
+    	// TODO set license fields value
+    	magnolia.setLicense(license);
+
+    	
+    	environment.setOperatingSystem(System.getProperty("os.name"));
+    	environment.setJavaVersion(System.getProperty("java.vendor") + " " + System.getProperty("java.version"));
+    	environment.setApplicationServer(infoService.getApplicationServer());
+    	// TODO set _database, _dbDriver
+    	environment.setRepository(infoService.getJcrRepository());
+    	
+    	info.setMagnolia(magnolia);
+    	info.setEnvironment(environment);
 
         return info;
-    }
-    
-    private String getMagnoliaVersion() { // TODO replace and get from ProductDescriptorExtractor ?
-    	
-    	String version = null;
-    	
-    	try {
-			Session session = MgnlContext.getJCRSession("config");
-			Node coreNode = session.getNode("/modules/core");
-			version = coreNode.getProperty("version").getString();
-		} catch (RepositoryException e) {
-			
-			e.printStackTrace(); // TODO deal with exception message
-		}
-    	
-    	return version;
-    }
-    
-    private String getMagnoliaInstanceType() {
-    	
-    	String version = null;
-    	
-    	try {
-			Session session = MgnlContext.getJCRSession("config");
-			Node serverNode = session.getNode("/server");
-			version = serverNode.getProperty("admin").getString();
-		} catch (RepositoryException e) {
-			
-			e.printStackTrace(); // TODO deal with exception message
-		}
-    	
-    	if (version.equals("true")) {
-    		return "AUTHOR";
-    	} else {
-    		return "PUBLIC";
-    	}
-    }
-    
-    private String getGitRepository() {
-    	
-    	String repository = null;
-    	
-    	MavenXpp3Reader reader = new MavenXpp3Reader();
-        try {
-			Model model = reader.read(new FileReader("pom.xml"));
-			repository = model.getScm().getConnection();
-		} catch (IOException | XmlPullParserException e) {
-
-			e.printStackTrace(); // TODO deal with exception message
-		}
-        
-        return repository;
-    }
-    
-    private String getApplicationServer() {
-    	
-    	WebContext web = MgnlContext.getWebContext();
-    	String appServer = web.getServletContext().getServerInfo();
-
-    	return appServer;
     }
 }
