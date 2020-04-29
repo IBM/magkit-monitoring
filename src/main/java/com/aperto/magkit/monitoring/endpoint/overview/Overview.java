@@ -20,7 +20,6 @@ import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
 
 public class Overview {
 	
-	
 	private List<EndpointsByCategory> _endpoints;
 
 	public Overview() {

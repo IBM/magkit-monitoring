@@ -32,7 +32,6 @@ public class EndpointsByCategory {
 		this._endpoints = endpointList;
 	}
 
-	//@JsonProperty(" ")
 	public String getCategory() {
 		return _category;
 	}
@@ -41,7 +40,6 @@ public class EndpointsByCategory {
 		this._category = category;
 	}
 
-	//@JsonProperty(" ")
 	public List<EndpointInfo> getEndpoints() {
 		return _endpoints;
 	}
