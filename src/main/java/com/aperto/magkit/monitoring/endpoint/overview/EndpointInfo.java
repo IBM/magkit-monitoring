@@ -1,5 +1,7 @@
 package com.aperto.magkit.monitoring.endpoint.overview;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 /**
  * 
  * Endpoint POJO.
@@ -10,6 +12,7 @@ package com.aperto.magkit.monitoring.endpoint.overview;
  *
  */
 
+@JsonPropertyOrder({"_name", "_path"})
 public class EndpointInfo {
 	
 	private String _name = "";

@@ -1,13 +1,8 @@
 package com.aperto.magkit.monitoring.endpoint.overview;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyDescription;
-import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
+import java.util.Map;
 
 /**
  * 
@@ -19,44 +14,20 @@ import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
  */
 
 public class Overview {
-	
-	private List<EndpointsByCategory> _endpoints;
 
+	private Map<String, List<EndpointInfo>> _categorizedEndpoints;
+	
 	public Overview() {
 		super();
-		this._endpoints = new ArrayList<EndpointsByCategory>();
+		_categorizedEndpoints = new HashMap<>();
 	}
 
-	public Overview(List<EndpointsByCategory> _endpoints) {
-		super();
-		this._endpoints = _endpoints;
+	public Map<String, List<EndpointInfo>> getCategorizedEndpoints() {
+		return _categorizedEndpoints;
 	}
 
-	@JsonProperty(" ")
-	public List<EndpointsByCategory> getEndpoints() {
-		return _endpoints;
+	public void setCategorizedEndpoints(Map<String, List<EndpointInfo>> categorizedEndpoints) {
+		this._categorizedEndpoints = categorizedEndpoints;
 	}
 
-	public void setEndpoints(List<EndpointsByCategory> endpoints) {
-		this._endpoints = endpoints;
-	}
-	
-	public boolean categoryExists(String category) {
-		
-		if (_endpoints.stream().anyMatch(p -> p.getCategory().equals(category))) return true;
-		return false;
-	}
-	
-	public void insertByCategory(EndpointInfo endpointInfo, String category) {
-		for (EndpointsByCategory cat : _endpoints) {
-			if (cat.getCategory().equals(category)) {
-				cat.getEndpoints().add(endpointInfo);
-				return;
-			}
-		}
-		
-		//the specific category was not found, must make a new one and add the element
-		_endpoints.add(new EndpointsByCategory(category, new ArrayList (Arrays.asList(endpointInfo))));
-	}
-	
 }

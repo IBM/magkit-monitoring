@@ -2,29 +2,20 @@ package com.aperto.magkit.monitoring.endpoint.overview;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import javax.inject.Inject;
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import com.aperto.magkit.monitoring.endpoint.AbstractMonitoringEndpoint;
 import com.aperto.magkit.monitoring.endpoint.ConfiguredMonitoringEndpointDefinition;
 import com.aperto.magkit.monitoring.endpoint.MonitoringEndpointDefinition;
 
-import info.magnolia.rest.DynamicPath;
-import info.magnolia.rest.EndpointDefinition;
-import info.magnolia.rest.RestDispatcherServlet;
 import info.magnolia.rest.registry.EndpointDefinitionRegistry;
-import info.magnolia.cms.core.AggregationState;
-import info.magnolia.config.registry.DefinitionProvider;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.context.SystemContext;
-import info.magnolia.init.MagnoliaConfigurationProperties;
 
 /**
  * 
@@ -41,8 +32,7 @@ public class OverviewEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpo
 	private EndpointDefinitionRegistry registry;
 
 	@Inject
-	protected OverviewEndpoint(MonitoringEndpointDefinition endpointDefinition,
-			EndpointDefinitionRegistry registry) {
+	protected OverviewEndpoint(MonitoringEndpointDefinition endpointDefinition, EndpointDefinitionRegistry registry) {
 		super(endpointDefinition);
 
 		this.registry = registry;
@@ -51,39 +41,51 @@ public class OverviewEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpo
 	@GET
 	@Path("")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Overview overview() {
+	public Response overview() {
 
-		Overview endpointsOverview = new Overview(new ArrayList<EndpointsByCategory>());
+		Overview endpointsOverview = new Overview();
 
 		registry.getAllProviders().forEach(p -> {
-			DefinitionProvider<EndpointDefinition> myDefP = p;
-			EndpointDefinition myEndPDef = myDefP.get();
+			
+			//INFO: the types of system variables we are working with
+			//p   ---------------------->    DefinitionProvider<EndpointDefinition>  
+			//p.get() ------------------>    EndpointDefinition endpointDefinition 
 
-			if (myEndPDef instanceof ConfiguredMonitoringEndpointDefinition) {
+			if (p.get() instanceof ConfiguredMonitoringEndpointDefinition) {
 
-				String endpointPath = "/.rest/" + myDefP.getMetadata().getReferenceId(); // "path"
+				String endpointPath = "/.rest/" + p.getMetadata().getReferenceId(); // "path"
 
-				String[] refIdElements = myDefP.getMetadata().getReferenceId().split("/");
+				String[] refIdElements = p.getMetadata().getReferenceId().split("/");
 
 				String version = "";
 				String name = "";
 
-				if (refIdElements.length == 3) {  // the endpoint is versioned: "monitoring" + version + moduleName
+				if (refIdElements.length == 3) { // the endpoint is versioned: "monitoring" + version + moduleName
 					version = refIdElements[1];
 					name = refIdElements[2];
-				} else {							// the endpoint is NOT versioned: "monitoring" + moduleName
+				} else { // the endpoint is NOT versioned: "monitoring" + moduleName
 					version = "custom";
 					name = refIdElements[1];
 				}
 
-				EndpointInfo myEndpoint = new EndpointInfo(name, endpointPath);
-				
-				endpointsOverview.insertByCategory(myEndpoint, version);
+				//we don't want to list our own Overview endpoint among the found endpoints;
+				//every other endpoint that implements or extends ConfiguredMonitoringEndpointDefinition is however added to the list
+				boolean isThisOurOverviewEndpoint = (p.getMetadata().getModule().equals("monitoring")) && (name.equals("overview")) ;
+
+				if (!isThisOurOverviewEndpoint) {
+					
+					EndpointInfo myEndpoint = new EndpointInfo(name, endpointPath);
+					if (endpointsOverview.getCategorizedEndpoints().keySet().contains(version)) {
+						endpointsOverview.getCategorizedEndpoints().get(version).add(myEndpoint);
+					} else {
+						endpointsOverview.getCategorizedEndpoints().put(version,
+								new ArrayList<EndpointInfo>(Arrays.asList(myEndpoint)));
+					}
+				}
 
 			}
-
 		});
 
-		return endpointsOverview;
+		return Response.status(Status.OK).entity(endpointsOverview.getCategorizedEndpoints()).build();
 	}
 }
