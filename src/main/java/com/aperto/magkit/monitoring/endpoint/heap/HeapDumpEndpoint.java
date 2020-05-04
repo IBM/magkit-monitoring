@@ -14,9 +14,12 @@ import javax.ws.rs.core.Response;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.aperto.magkit.monitoring.endpoint.AbstractMonitoringEndpoint;
 import com.aperto.magkit.monitoring.endpoint.MonitoringEndpointDefinition;
+import com.aperto.magkit.monitoring.endpoint.info.InfoEndpoint;
 import com.sun.management.HotSpotDiagnosticMXBean;
 
 import info.magnolia.rest.DynamicPath;
@@ -33,6 +36,8 @@ import info.magnolia.rest.DynamicPath;
 @DynamicPath
 public class HeapDumpEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpointDefinition> {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(HeapDumpEndpoint.class);
+	
 	public static final Integer LINE_LIMIT 		= 1000;	
 	public static final String FILE_LOCATION 	= "tmp/heapdump";
 	public static final String FILE_NAME 		= "heap_dump";
@@ -69,7 +74,7 @@ public class HeapDumpEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpo
 //			    LineIterator.closeQuietly(it);
 //			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error(e.getMessage(), e);
 		}
         //return heapDumpData.toString();
         return Response.ok(file, MediaType.APPLICATION_OCTET_STREAM)

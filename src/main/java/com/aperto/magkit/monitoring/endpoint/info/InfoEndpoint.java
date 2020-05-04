@@ -83,7 +83,7 @@ public class InfoEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpointD
             }
             
          } catch(Exception e) {
-            e.printStackTrace();
+        	 LOGGER.error(e.getMessage(), e);
          } finally {
             if(is!=null)
                is.close();

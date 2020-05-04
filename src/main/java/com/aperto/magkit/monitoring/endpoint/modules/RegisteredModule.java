@@ -4,7 +4,15 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.version.Version;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.aperto.magkit.monitoring.endpoint.info.InfoEndpoint;
+
 public class RegisteredModule {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(RegisteredModule.class);
+	
 	private String name;
 	private String version;
 	
@@ -15,7 +23,7 @@ public class RegisteredModule {
 			this.version =  module.getProperty("version").getValue().getString();
 			
 		} catch (RepositoryException e) {
-			e.printStackTrace();
+			LOGGER.error(e.getMessage(), e);
 		}
 	}
 	
