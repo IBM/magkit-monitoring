@@ -17,16 +17,16 @@ import info.magnolia.rest.DynamicPath;
  * This endpoint provides general information about the JVM runtime.
  * - used / available memory
  * - Garbage Collector information
- * 		a) Garbage Collectors Name
- * 		b) Garbage Collectors Memory Pools
- * 		c) Collection Count for each Garbage Collector
- * 		d) Collection Time for each Garbage Collector
- * 		e) Total Collection Count
- * 		f) Total Collection Time
+ *  a) Garbage Collectors Name
+ *  b) Garbage Collectors Memory Pools
+ *  c) Collection Count for each Garbage Collector
+ *  d) Collection Time for each Garbage Collector
+ *  e) Total Collection Count
+ *  f) Total Collection Time
  * - No. of active threads
  * 
  * Example for endpoint call:
- * 		http://localhost:8001/author/.rest/monitoring/v1/metrics
+ *      http://localhost:8001/author/.rest/monitoring/v1/metrics
  * </pre>
  * 
  * @author MIHAELA PAPARETE (IBM)
@@ -36,19 +36,20 @@ import info.magnolia.rest.DynamicPath;
 @Path("")
 @DynamicPath
 public class MetricsEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpointDefinition> {
-	private MetricsService metricsService;
 
-	@Inject
-	protected MetricsEndpoint(MonitoringEndpointDefinition endpointDefinition, MetricsService service) {
-		super(endpointDefinition);
-		this.metricsService = service;
-	}
+    private MetricsService _metricsService;
 
-	@GET
-	@Path("")
-	@Produces(MediaType.APPLICATION_JSON)
-	public MetricsInfo getMetrics() {
-		return metricsService.getInfoMetrics();
-	}
+    @Inject
+    protected MetricsEndpoint(MonitoringEndpointDefinition endpointDefinition, MetricsService service) {
+        super(endpointDefinition);
+        _metricsService = service;
+    }
+
+    @GET
+    @Path("")
+    @Produces(MediaType.APPLICATION_JSON)
+    public MetricsInfo getMetrics() {
+        return _metricsService.getInfoMetrics();
+    }
 
 }

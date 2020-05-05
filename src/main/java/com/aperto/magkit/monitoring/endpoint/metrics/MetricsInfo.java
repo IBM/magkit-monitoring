@@ -13,71 +13,72 @@ import java.util.List;
  *
  */
 public class MetricsInfo {
-	// Represented in MB
-	private BigDecimal _usedMemoryMb;
 
-	// Represented in MB
-	private BigDecimal _availableMemoryMb;
+    // Represented in MB
+    private BigDecimal _usedMemoryMb;
 
-	// Represented in MB
-	private BigDecimal _totalMemoryMb;
+    // Represented in MB
+    private BigDecimal _availableMemoryMb;
 
-	private int _nbActiveThreads;
+    // Represented in MB
+    private BigDecimal _totalMemoryMb;
 
-	private List<GarbageCollectorInfo> _gcInfo = new ArrayList<GarbageCollectorInfo>();
+    private int _nbActiveThreads;
 
-	private long _totalCollectionCount;
-	private long _totalCollectionTime;
+    private List<GarbageCollectorInfo> _gcInfo = new ArrayList<GarbageCollectorInfo>();
 
-	public BigDecimal getUsedMemoryMb() {
-		return _usedMemoryMb;
-	}
+    private long _totalCollectionCount;
+    private long _totalCollectionTime;
 
-	public void setUsedMemoryMb(BigDecimal usedMemory) {
-		_usedMemoryMb = usedMemory;
-	}
+    public BigDecimal getUsedMemoryMb() {
+        return _usedMemoryMb;
+    }
 
-	public BigDecimal getAvailableMemoryMb() {
-		return _availableMemoryMb;
-	}
+    public void setUsedMemoryMb(BigDecimal usedMemory) {
+        _usedMemoryMb = usedMemory;
+    }
 
-	public void setAvailableMemoryMb(BigDecimal availableMemory) {
-		_availableMemoryMb = availableMemory;
-	}
+    public BigDecimal getAvailableMemoryMb() {
+        return _availableMemoryMb;
+    }
 
-	public BigDecimal getTotalMemoryMb() {
-		return _totalMemoryMb;
-	}
+    public void setAvailableMemoryMb(BigDecimal availableMemory) {
+        _availableMemoryMb = availableMemory;
+    }
 
-	public void setTotalMemoryMb(BigDecimal totalMemory) {
-		_totalMemoryMb = totalMemory;
-	}
+    public BigDecimal getTotalMemoryMb() {
+        return _totalMemoryMb;
+    }
 
-	public int getNbActiveThreads() {
-		return _nbActiveThreads;
-	}
+    public void setTotalMemoryMb(BigDecimal totalMemory) {
+        _totalMemoryMb = totalMemory;
+    }
 
-	public void setNbActiveThreads(int nbActiveThreads) {
-		_nbActiveThreads = nbActiveThreads;
-	}
+    public int getNbActiveThreads() {
+        return _nbActiveThreads;
+    }
 
-	public List<GarbageCollectorInfo> getGcInfo() {
-		return _gcInfo;
-	}
+    public void setNbActiveThreads(int nbActiveThreads) {
+        _nbActiveThreads = nbActiveThreads;
+    }
 
-	public long getTotalCollectionCount() {
-		return _totalCollectionCount;
-	}
+    public List<GarbageCollectorInfo> getGcInfo() {
+        return _gcInfo;
+    }
 
-	public void setTotalCollectionCount(long totalCollectionCount) {
-		_totalCollectionCount = totalCollectionCount;
-	}
+    public long getTotalCollectionCount() {
+        return _totalCollectionCount;
+    }
 
-	public long getTotalCollectionTime() {
-		return _totalCollectionTime;
-	}
+    public void setTotalCollectionCount(long totalCollectionCount) {
+        _totalCollectionCount = totalCollectionCount;
+    }
 
-	public void setTotalCollectionTime(long totalCollectionTime) {
-		_totalCollectionTime = totalCollectionTime;
-	}
+    public long getTotalCollectionTime() {
+        return _totalCollectionTime;
+    }
+
+    public void setTotalCollectionTime(long totalCollectionTime) {
+        _totalCollectionTime = totalCollectionTime;
+    }
 }
