@@ -10,41 +10,41 @@ package com.aperto.magkit.monitoring.endpoint.info.pojo;
  */
 public class Magnolia {
 
-	private String _edition;
-	private String _version;
-	private String _instance;
-	
-	private License _license;
+    private String _edition;
+    private String _version;
+    private String _instance;
 
-	public String getEdition() {
-		return _edition;
-	}
+    private License _license;
 
-	public void setEdition(String edition) {
-		_edition = edition;
-	}
+    public String getEdition() {
+        return _edition;
+    }
 
-	public String getVersion() {
-		return _version;
-	}
+    public void setEdition(String edition) {
+        _edition = edition;
+    }
 
-	public void setVersion(String version) {
-		_version = version;
-	}
+    public String getVersion() {
+        return _version;
+    }
 
-	public String getInstance() {
-		return _instance;
-	}
+    public void setVersion(String version) {
+        _version = version;
+    }
 
-	public void setInstance(String instance) {
-		_instance = instance;
-	}
+    public String getInstance() {
+        return _instance;
+    }
 
-	public License getLicense() {
-		return _license;
-	}
+    public void setInstance(String instance) {
+        _instance = instance;
+    }
 
-	public void setLicense(License license) {
-		_license = license;
-	}
+    public License getLicense() {
+        return _license;
+    }
+
+    public void setLicense(License license) {
+        _license = license;
+    }
 }
