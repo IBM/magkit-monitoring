@@ -1,6 +1,5 @@
 package com.aperto.magkit.monitoring.endpoint.thread;
 
-
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
@@ -37,14 +36,14 @@ public class ThreadDumpEndpoint extends AbstractMonitoringEndpoint<MonitoringEnd
     @Path("")
     @Produces(MediaType.TEXT_PLAIN)
     public String getThreadDump() {
-    	String threadDump = threadDump(false, false);
-        return threadDump;  
+        String threadDump = threadDump(false, false);
+        return threadDump;
     }
-    
+
     private static String threadDump(boolean lockedMonitors, boolean lockedSynchronizers) {
         StringBuffer threadDump = new StringBuffer(System.lineSeparator());
-        ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
-        for(ThreadInfo threadInfo : threadMXBean.dumpAllThreads(lockedMonitors, lockedSynchronizers)) {
+        ThreadMXBean threadMxBean = ManagementFactory.getThreadMXBean();
+        for (ThreadInfo threadInfo : threadMxBean.dumpAllThreads(lockedMonitors, lockedSynchronizers)) {
             threadDump.append(threadInfo.toString());
         }
         return threadDump.toString();
