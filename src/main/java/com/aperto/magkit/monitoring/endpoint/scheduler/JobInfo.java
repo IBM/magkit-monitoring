@@ -10,40 +10,41 @@ package com.aperto.magkit.monitoring.endpoint.scheduler;
  *
  */
 public class JobInfo {
-	private String _name;
-	private String _description;
-	private String _cron;
-	private String _nextExecution;
 
-	public String getName() {
-		return _name;
-	}
+    private String _name;
+    private String _description;
+    private String _cron;
+    private String _nextExecution;
 
-	public void setName(String name) {
-		_name = name;
-	}
+    public String getName() {
+        return _name;
+    }
 
-	public String getDescription() {
-		return _description;
-	}
+    public void setName(String name) {
+        _name = name;
+    }
 
-	public void setDescription(String description) {
-		_description = description;
-	}
+    public String getDescription() {
+        return _description;
+    }
 
-	public String getCron() {
-		return _cron;
-	}
+    public void setDescription(String description) {
+        _description = description;
+    }
 
-	public void setCron(String cron) {
-		_cron = cron;
-	}
+    public String getCron() {
+        return _cron;
+    }
 
-	public String getNextExecution() {
-		return _nextExecution;
-	}
+    public void setCron(String cron) {
+        _cron = cron;
+    }
 
-	public void setNextExecution(String nextExecution) {
-		_nextExecution = nextExecution;
-	}
+    public String getNextExecution() {
+        return _nextExecution;
+    }
+
+    public void setNextExecution(String nextExecution) {
+        _nextExecution = nextExecution;
+    }
 }

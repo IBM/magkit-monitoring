@@ -30,26 +30,27 @@ import info.magnolia.rest.DynamicPath;
 @Path("")
 @DynamicPath
 public class SchedulerEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpointDefinition> {
-	private static final Logger LOGGER = LoggerFactory.getLogger(SchedulerEndpoint.class);
 
-	private SchedulerService schedulerService;
+    private static final Logger LOGGER = LoggerFactory.getLogger(SchedulerEndpoint.class);
 
-	@Inject
-	protected SchedulerEndpoint(MonitoringEndpointDefinition endpointDefinition, SchedulerService service) {
-		super(endpointDefinition);
+    private SchedulerService _schedulerService;
 
-		this.schedulerService = service;
-	}
+    @Inject
+    protected SchedulerEndpoint(MonitoringEndpointDefinition endpointDefinition, SchedulerService service) {
+        super(endpointDefinition);
 
-	@GET
-	@Path("")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getScheduledJobs() {
-		try {
-			return Response.status(Status.OK).entity(schedulerService.getEnabledJobs()).build();
-		} catch (Exception e) {
-			LOGGER.error("An error occurred getting the scheduled jobs", e);
-			return Response.status(Status.BAD_REQUEST).entity("An error occurred: "+e.getMessage()).build();
-		}
-	}
+        _schedulerService = service;
+    }
+
+    @GET
+    @Path("")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getScheduledJobs() {
+        try {
+            return Response.status(Status.OK).entity(_schedulerService.getEnabledJobs()).build();
+        } catch (Exception e) {
+            LOGGER.error("An error occurred getting the scheduled jobs", e);
+            return Response.status(Status.BAD_REQUEST).entity("An error occurred: " + e.getMessage()).build();
+        }
+    }
 }
