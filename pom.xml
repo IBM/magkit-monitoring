@@ -29,6 +29,16 @@
       <version>6.2</version>
     </dependency>
     <dependency>
+		<groupId>info.magnolia.about</groupId>
+		<artifactId>magnolia-about-app</artifactId>
+		<version>6.2</version>
+	</dependency>
+	<dependency>
+		<groupId>info.magnolia</groupId>
+		<artifactId>magnolia-license</artifactId>
+		<version>1.7.1</version>
+	</dependency>
+    <dependency>
       <groupId>info.magnolia.rest</groupId>
       <artifactId>magnolia-rest-services</artifactId>
       <version>2.2</version>
@@ -43,12 +53,12 @@
       <artifactId>magnolia-module-scheduler</artifactId>
       <version>2.3.3</version>
     </dependency>
-	<dependency>
+    <dependency>
 	    <groupId>javax.servlet</groupId>
 	    <artifactId>javax.servlet-api</artifactId>
 	    <version>4.0.1</version>
 	    <scope>provided</scope>
-	</dependency>
+	</dependency>	
   </dependencies>
 
   <build>

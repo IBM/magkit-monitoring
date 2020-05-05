@@ -13,6 +13,7 @@ public class License {
 	private String _owner;
 	private String _expirationDate;
 	
+	
 	public String getOwner() {
 		return _owner;
 	}

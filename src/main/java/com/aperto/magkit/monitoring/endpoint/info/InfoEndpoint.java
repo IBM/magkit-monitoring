@@ -1,7 +1,7 @@
 package com.aperto.magkit.monitoring.endpoint.info;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.text.SimpleDateFormat;
 
 import javax.inject.Inject;
 
@@ -10,18 +10,16 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.aperto.magkit.monitoring.endpoint.AbstractMonitoringEndpoint;
 import com.aperto.magkit.monitoring.endpoint.MonitoringEndpointDefinition;
 import com.aperto.magkit.monitoring.endpoint.info.pojo.Environment;
 import com.aperto.magkit.monitoring.endpoint.info.pojo.Info;
 import com.aperto.magkit.monitoring.endpoint.info.pojo.License;
 import com.aperto.magkit.monitoring.endpoint.info.pojo.Magnolia;
-import com.aperto.magkit.monitoring.endpoint.info.service.InfoService;
 
-import info.magnolia.cms.pddescriptor.ProductDescriptorExtractor;
+import info.magnolia.about.app.InstanceConfigurationProvider;
+import info.magnolia.license.LicenseConsts;
+import info.magnolia.license.LicenseManager;
 import info.magnolia.rest.DynamicPath;
 
 /**
@@ -36,19 +34,20 @@ import info.magnolia.rest.DynamicPath;
 @DynamicPath
 public class InfoEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpointDefinition> {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(InfoEndpoint.class);
-
-	private InfoService infoService;
+	private static final String AUTHOR = "author";
+	private static final String PUBLIC = "public";
 	
-	private ProductDescriptorExtractor pde;
+	private InstanceConfigurationProvider configurationProvider;
+	private LicenseManager licenseManager;
+	
 	
 	@Inject
-    protected InfoEndpoint(MonitoringEndpointDefinition endpointDefinition, ProductDescriptorExtractor pde, InfoService infoService) {
+    protected InfoEndpoint(MonitoringEndpointDefinition endpointDefinition, InstanceConfigurationProvider configurationProvider, LicenseManager licenseManager) {
         
 		super(endpointDefinition);
         
-		this.infoService = infoService;
-		this.pde = pde;
+		this.configurationProvider = configurationProvider;
+		this.licenseManager = licenseManager;
     }
 
     @GET
@@ -56,49 +55,31 @@ public class InfoEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpointD
     @Produces(MediaType.APPLICATION_JSON)
     public Info info() throws IOException {
     	
+    	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+    	
     	Info info = new Info();
     	
     	Magnolia magnolia = new Magnolia();
     	License license = new License();
     	Environment environment = new Environment();
-    	
-    	
-    	magnolia.setEdition(pde.get(ProductDescriptorExtractor.EDITION));
-    	magnolia.setVersion(infoService.getMagnoliaVersion());
-    	magnolia.setInstance(infoService.getMagnoliaInstanceType());
-    	
-    	String LICENSE_FILE_PATH = "info/magnolia/cms/pddescriptor/pddescriptor.xml";
-    	String PLATFORM_COMPONENTS = "/info/magnolia/init/platform-components.xml";
-    	InputStream is = getClass().getClassLoader().getResourceAsStream(PLATFORM_COMPONENTS);
-    	int i;
-    	char c;
-    	
-    	try {
-            System.out.println("pddescriptor.xml printed:");
-            
-            while((i = is.read())!=-1) {
 
-               c = (char)i;
-               System.out.print(c);
-            }
-            
-         } catch(Exception e) {
-            e.printStackTrace();
-         } finally {
-            if(is!=null)
-               is.close();
-         }
+    	magnolia.setEdition(configurationProvider.getEditionName());
+    	magnolia.setVersion(configurationProvider.getMagnoliaVersion());
+    	magnolia.setInstance(configurationProvider.isAdmin() == true ? AUTHOR : PUBLIC);
     	
-
-    	// TODO set license fields value
+    	info.magnolia.license.License magnoliaLicense = licenseManager.getLicense(LicenseConsts.MODULE_ENTERPRISE);
+    	
+    	license.setOwner(magnoliaLicense.getOwner());
+    	license.setExpirationDate(formatter.format(magnoliaLicense.getExpirationDate()));
+    	
     	magnolia.setLicense(license);
-
     	
     	environment.setOperatingSystem(System.getProperty("os.name"));
     	environment.setJavaVersion(System.getProperty("java.vendor") + " " + System.getProperty("java.version"));
-    	environment.setApplicationServer(infoService.getApplicationServer());
-    	// TODO set _database, _dbDriver
-    	environment.setRepository(infoService.getJcrRepository());
+    	environment.setApplicationServer(configurationProvider.getApplicationServer());
+    	environment.setDatabase(configurationProvider.getDatabase());
+    	environment.setDbDriver(configurationProvider.getDatabaseDriver());
+    	environment.setRepository(configurationProvider.getJcrName() + " " + configurationProvider.getJcrVersion());
     	
     	info.setMagnolia(magnolia);
     	info.setEnvironment(environment);
