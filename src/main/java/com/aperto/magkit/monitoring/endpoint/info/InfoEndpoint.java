@@ -68,7 +68,7 @@ public class InfoEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpointD
     	magnolia.setInstance(configurationProvider.isAdmin() == true ? AUTHOR : PUBLIC);
     	
     	info.magnolia.license.License magnoliaLicense = licenseManager.getLicense(LicenseConsts.MODULE_ENTERPRISE);
-    	
+
     	license.setOwner(magnoliaLicense.getOwner());
     	license.setExpirationDate(formatter.format(magnoliaLicense.getExpirationDate()));
     	
