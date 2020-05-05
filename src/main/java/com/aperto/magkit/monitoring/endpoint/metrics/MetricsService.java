@@ -7,71 +7,72 @@ import java.math.RoundingMode;
 
 /**
  * 
- * This is the service class for Metrics endpoint
+ * This is the service class for Metrics endpoint.
  * 
  * @author MIHAELA PAPARETE (IBM)
  * @since 2020-04-08
  *
  */
 public class MetricsService {
-	private static final int MB_SIZE = 1024 * 1024;
 
-	public MetricsInfo getInfoMetrics() {
-		MetricsInfo metricsInfo = new MetricsInfo();
+    private static final int MB_SIZE = 1024 * 1024;
 
-		// the current allocated space ready for new objects
-		long freeMemory = Runtime.getRuntime().freeMemory();
+    public MetricsInfo getInfoMetrics() {
+        MetricsInfo metricsInfo = new MetricsInfo();
 
-		// the total allocated space reserved for the java process thus far
-		long totalMemory = Runtime.getRuntime().totalMemory();
+        // the current allocated space ready for new objects
+        long freeMemory = Runtime.getRuntime().freeMemory();
 
-		// the maximum amount of memory that the JVM will attempt to use
-		long maxMemory = Runtime.getRuntime().maxMemory();
+        // the total allocated space reserved for the java process thus far
+        long totalMemory = Runtime.getRuntime().totalMemory();
 
-		double usedMemory = (double) (totalMemory - freeMemory) / MB_SIZE;
-		double availableMemory = (double) maxMemory / MB_SIZE - usedMemory;
+        // the maximum amount of memory that the JVM will attempt to use
+        long maxMemory = Runtime.getRuntime().maxMemory();
 
-		metricsInfo.setUsedMemoryMb(BigDecimal.valueOf(usedMemory).setScale(4, RoundingMode.HALF_UP));
-		metricsInfo.setAvailableMemoryMb(BigDecimal.valueOf(availableMemory).setScale(4, RoundingMode.HALF_UP));
+        double usedMemory = (double) (totalMemory - freeMemory) / MB_SIZE;
+        double availableMemory = (double) maxMemory / MB_SIZE - usedMemory;
 
-		BigDecimal total = metricsInfo.getAvailableMemoryMb().add(metricsInfo.getUsedMemoryMb());
-		metricsInfo.setTotalMemoryMb(total.setScale(4, RoundingMode.HALF_UP));
+        metricsInfo.setUsedMemoryMb(BigDecimal.valueOf(usedMemory).setScale(4, RoundingMode.HALF_UP));
+        metricsInfo.setAvailableMemoryMb(BigDecimal.valueOf(availableMemory).setScale(4, RoundingMode.HALF_UP));
 
-		// the number of active threads for the current thread
-		int activeThreads = Thread.activeCount();
+        BigDecimal total = metricsInfo.getAvailableMemoryMb().add(metricsInfo.getUsedMemoryMb());
+        metricsInfo.setTotalMemoryMb(total.setScale(4, RoundingMode.HALF_UP));
 
-		metricsInfo.setNbActiveThreads(activeThreads);
+        // the number of active threads for the current thread
+        int activeThreads = Thread.activeCount();
 
-		long totalGarbageCollections = 0;
-		long garbageCollectionTime = 0;
+        metricsInfo.setNbActiveThreads(activeThreads);
 
-		for (GarbageCollectorMXBean gc : ManagementFactory.getGarbageCollectorMXBeans()) {
-			GarbageCollectorInfo gcInfo = getGarbageCollectorInfo(gc);
+        long totalGarbageCollections = 0;
+        long garbageCollectionTime = 0;
 
-			metricsInfo.getGcInfo().add(gcInfo);
+        for (GarbageCollectorMXBean gc : ManagementFactory.getGarbageCollectorMXBeans()) {
+            GarbageCollectorInfo gcInfo = getGarbageCollectorInfo(gc);
 
-			totalGarbageCollections += gcInfo.getCollectionCount() >= 0 ? gcInfo.getCollectionCount() : 0;
-			garbageCollectionTime += gcInfo.getCollectionTime() >= 0 ? gcInfo.getCollectionTime() : 0;
-		}
+            metricsInfo.getGcInfo().add(gcInfo);
 
-		metricsInfo.setTotalCollectionCount(totalGarbageCollections);
-		metricsInfo.setTotalCollectionTime(garbageCollectionTime);
+            totalGarbageCollections += gcInfo.getCollectionCount() >= 0 ? gcInfo.getCollectionCount() : 0;
+            garbageCollectionTime += gcInfo.getCollectionTime() >= 0 ? gcInfo.getCollectionTime() : 0;
+        }
 
-		return metricsInfo;
-	}
+        metricsInfo.setTotalCollectionCount(totalGarbageCollections);
+        metricsInfo.setTotalCollectionTime(garbageCollectionTime);
 
-	public GarbageCollectorInfo getGarbageCollectorInfo(GarbageCollectorMXBean gc) {
-		long count = gc.getCollectionCount();
-		long time = gc.getCollectionTime();
-		String name = gc.getName();
-		String[] memoryPools = gc.getMemoryPoolNames();
+        return metricsInfo;
+    }
 
-		GarbageCollectorInfo gcInfo = new GarbageCollectorInfo();
-		gcInfo.setName(name);
-		gcInfo.setCollectionCount(count);
-		gcInfo.setCollectionTime(time);
-		gcInfo.setMemoryPools(memoryPools);
+    public GarbageCollectorInfo getGarbageCollectorInfo(GarbageCollectorMXBean gc) {
+        long count = gc.getCollectionCount();
+        long time = gc.getCollectionTime();
+        String name = gc.getName();
+        String[] memoryPools = gc.getMemoryPoolNames();
 
-		return gcInfo;
-	}
+        GarbageCollectorInfo gcInfo = new GarbageCollectorInfo();
+        gcInfo.setName(name);
+        gcInfo.setCollectionCount(count);
+        gcInfo.setCollectionTime(time);
+        gcInfo.setMemoryPools(memoryPools);
+
+        return gcInfo;
+    }
 }

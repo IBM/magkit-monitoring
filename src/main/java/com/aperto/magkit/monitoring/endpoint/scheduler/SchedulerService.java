@@ -14,41 +14,42 @@ import info.magnolia.module.scheduler.SchedulerModule;
 
 /**
  * 
- * This is the service class for Scheduler endpoint
+ * This is the service class for Scheduler endpoint.
  * 
  * @author MIHAELA PAPARETE (IBM)
  * @since 2020-04-23
  *
  */
 public class SchedulerService {
-	private SchedulerModule schedulerModule;
 
-	@Inject
-	protected SchedulerService(SchedulerModule module) {
-		this.schedulerModule = module;
-	}
+    private SchedulerModule _schedulerModule;
 
-	public List<JobInfo> getEnabledJobs() throws Exception {
-		List<JobInfo> scheduledJobs = new ArrayList<JobInfo>();
+    @Inject
+    protected SchedulerService(SchedulerModule module) {
+        _schedulerModule = module;
+    }
 
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+    public List<JobInfo> getEnabledJobs() throws Exception {
+        List<JobInfo> scheduledJobs = new ArrayList<JobInfo>();
 
-		for (JobDefinition job : schedulerModule.getJobs()) {
-			if (job.isEnabled()) {
-				JobInfo jobInfo = new JobInfo();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
-				String cronExpression = job.getCron();
-				CronExpression cron = new CronExpression(cronExpression);
-				Date nextExecution = cron.getNextValidTimeAfter(new Date());
+        for (JobDefinition job : _schedulerModule.getJobs()) {
+            if (job.isEnabled()) {
+                JobInfo jobInfo = new JobInfo();
 
-				jobInfo.setName(job.getName());
-				jobInfo.setDescription(job.getDescription());
-				jobInfo.setCron(cronExpression);
-				jobInfo.setNextExecution(formatter.format(nextExecution));
-				scheduledJobs.add(jobInfo);
-			}
-		}
+                String cronExpression = job.getCron();
+                CronExpression cron = new CronExpression(cronExpression);
+                Date nextExecution = cron.getNextValidTimeAfter(new Date());
 
-		return scheduledJobs;
-	}
+                jobInfo.setName(job.getName());
+                jobInfo.setDescription(job.getDescription());
+                jobInfo.setCron(cronExpression);
+                jobInfo.setNextExecution(formatter.format(nextExecution));
+                scheduledJobs.add(jobInfo);
+            }
+        }
+
+        return scheduledJobs;
+    }
 }

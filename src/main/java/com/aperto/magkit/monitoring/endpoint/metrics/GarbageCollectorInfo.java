@@ -10,40 +10,41 @@ package com.aperto.magkit.monitoring.endpoint.metrics;
  *
  */
 public class GarbageCollectorInfo {
-	private String _name;
-	private String[] _memoryPools;
-	private long _collectionCount;
-	private long _collectionTime;
 
-	public String getName() {
-		return _name;
-	}
+    private String _name;
+    private String[] _memoryPools;
+    private long _collectionCount;
+    private long _collectionTime;
 
-	public void setName(String name) {
-		_name = name;
-	}
+    public String getName() {
+        return _name;
+    }
 
-	public String[] getMemoryPools() {
-		return _memoryPools;
-	}
+    public void setName(String name) {
+        _name = name;
+    }
 
-	public void setMemoryPools(String[] memoryPools) {
-		_memoryPools = memoryPools;
-	}
+    public String[] getMemoryPools() {
+        return _memoryPools;
+    }
 
-	public long getCollectionCount() {
-		return _collectionCount;
-	}
+    public void setMemoryPools(String[] memoryPools) {
+        _memoryPools = memoryPools;
+    }
 
-	public void setCollectionCount(long collectionCount) {
-		_collectionCount = collectionCount;
-	}
+    public long getCollectionCount() {
+        return _collectionCount;
+    }
 
-	public long getCollectionTime() {
-		return _collectionTime;
-	}
+    public void setCollectionCount(long collectionCount) {
+        _collectionCount = collectionCount;
+    }
 
-	public void setCollectionTime(long collectionTime) {
-		_collectionTime = collectionTime;
-	}
+    public long getCollectionTime() {
+        return _collectionTime;
+    }
+
+    public void setCollectionTime(long collectionTime) {
+        _collectionTime = collectionTime;
+    }
 }
