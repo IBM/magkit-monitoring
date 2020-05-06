@@ -29,63 +29,68 @@ import info.magnolia.rest.registry.EndpointDefinitionRegistry;
 @Path("/monitoring")
 public class OverviewEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpointDefinition> {
 
-	private EndpointDefinitionRegistry registry;
+    private EndpointDefinitionRegistry _registry;
 
-	@Inject
-	protected OverviewEndpoint(MonitoringEndpointDefinition endpointDefinition, EndpointDefinitionRegistry registry) {
-		super(endpointDefinition);
+    @Inject
+    protected OverviewEndpoint(MonitoringEndpointDefinition endpointDefinition, EndpointDefinitionRegistry registry) {
+        super(endpointDefinition);
 
-		this.registry = registry;
-	}
+        _registry = registry;
+    }
 
-	@GET
-	@Path("")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response overview() {
+    @GET
+    @Path("")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response overview() {
 
-		Overview endpointsOverview = new Overview();
+        Overview endpointsOverview = new Overview();
 
-		registry.getAllProviders().forEach(p -> {
-			
-			//INFO: the types of system variables we are working with
-			//p   ---------------------->    DefinitionProvider<EndpointDefinition>  
-			//p.get() ------------------>    EndpointDefinition endpointDefinition 
+        _registry.getAllProviders().forEach(p -> {
 
-			if (p.get() instanceof ConfiguredMonitoringEndpointDefinition) {
+            // INFO: the types of system variables we are working with
+            // p ----------------------> DefinitionProvider<EndpointDefinition>
+            // p.get() ------------------> EndpointDefinition endpointDefinition
 
-				String endpointPath = "/.rest/" + p.getMetadata().getReferenceId(); // "path"
+            if (p.get() instanceof ConfiguredMonitoringEndpointDefinition) {
 
-				String[] refIdElements = p.getMetadata().getReferenceId().split("/");
+                // "path"
+                String endpointPath = "/.rest/" + p.getMetadata().getReferenceId();
 
-				String version = "";
-				String name = "";
+                String[] refIdElements = p.getMetadata().getReferenceId().split("/");
 
-				if (refIdElements.length == 3) { // the endpoint is versioned: "monitoring" + version + moduleName
-					version = refIdElements[1];
-					name = refIdElements[2];
-				} else { // the endpoint is NOT versioned: "monitoring" + moduleName
-					version = "custom";
-					name = refIdElements[1];
-				}
+                String version = "";
+                String name = "";
 
-				//we don't want to list our own Overview endpoint among the found endpoints;
-				//every other endpoint that implements or extends ConfiguredMonitoringEndpointDefinition is however added to the list
-				boolean isThisOurOverviewEndpoint = (p.getMetadata().getModule().equals("monitoring")) && (name.equals("overview")) ;
+                if (refIdElements.length == 3) {
+                    // the endpoint is versioned: "monitoring" + version + moduleName
+                    version = refIdElements[1];
+                    name = refIdElements[2];
+                } else {
+                    // the endpoint is NOT versioned: "monitoring" + moduleName
+                    version = "custom";
+                    name = refIdElements[1];
+                }
 
-				if (!isThisOurOverviewEndpoint) {
-					
-					EndpointInfo myEndpoint = new EndpointInfo(name, endpointPath);
-					if (endpointsOverview.getCategorizedEndpoints().keySet().contains(version)) {
-						endpointsOverview.getCategorizedEndpoints().get(version).add(myEndpoint);
-					} else {
-						endpointsOverview.getCategorizedEndpoints().put(version,
-								new ArrayList<EndpointInfo>(Arrays.asList(myEndpoint)));
-					}
-				}
+                // we don't want to list our own Overview endpoint among the found endpoints;
+                // every other endpoint that implements or extends
+                // ConfiguredMonitoringEndpointDefinition is however added to the list
+                boolean isThisOurOverviewEndpoint = (p.getMetadata().getModule().equals("monitoring"))
+                        && ("overview".equals(name));
 
-			}
-		});
+                if (!isThisOurOverviewEndpoint) {
 
-		return Response.status(Status.OK).entity(endpointsOverview.getCategorizedEndpoints()).build();
-	}
+                    EndpointInfo myEndpoint = new EndpointInfo(name, endpointPath);
+                    if (endpointsOverview.getCategorizedEndpoints().keySet().contains(version)) {
+                        endpointsOverview.getCategorizedEndpoints().get(version).add(myEndpoint);
+                    } else {
+                        endpointsOverview.getCategorizedEndpoints().put(version,
+                                new ArrayList<EndpointInfo>(Arrays.asList(myEndpoint)));
+                    }
+                }
+
+            }
+        });
+
+        return Response.status(Status.OK).entity(endpointsOverview.getCategorizedEndpoints()).build();
+    }
 }

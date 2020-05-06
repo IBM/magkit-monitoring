@@ -15,19 +15,19 @@ import java.util.Map;
 
 public class Overview {
 
-	private Map<String, List<EndpointInfo>> _categorizedEndpoints;
-	
-	public Overview() {
-		super();
-		_categorizedEndpoints = new HashMap<>();
-	}
+    private Map<String, List<EndpointInfo>> _categorizedEndpoints;
 
-	public Map<String, List<EndpointInfo>> getCategorizedEndpoints() {
-		return _categorizedEndpoints;
-	}
+    public Overview() {
+        super();
+        _categorizedEndpoints = new HashMap<>();
+    }
 
-	public void setCategorizedEndpoints(Map<String, List<EndpointInfo>> categorizedEndpoints) {
-		this._categorizedEndpoints = categorizedEndpoints;
-	}
+    public Map<String, List<EndpointInfo>> getCategorizedEndpoints() {
+        return _categorizedEndpoints;
+    }
+
+    public void setCategorizedEndpoints(Map<String, List<EndpointInfo>> categorizedEndpoints) {
+        _categorizedEndpoints = categorizedEndpoints;
+    }
 
 }
