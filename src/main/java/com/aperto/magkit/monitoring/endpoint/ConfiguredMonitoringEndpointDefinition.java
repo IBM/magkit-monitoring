@@ -10,7 +10,7 @@ package com.aperto.magkit.monitoring.endpoint;
  */
 public class ConfiguredMonitoringEndpointDefinition implements MonitoringEndpointDefinition {
 
-    /** Generated **/
+    /** Generated. **/
     private static final long serialVersionUID = -7842531283685607096L;
 
     private Class<?> _implementationClass;

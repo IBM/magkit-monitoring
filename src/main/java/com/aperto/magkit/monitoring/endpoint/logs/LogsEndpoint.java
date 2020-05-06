@@ -33,7 +33,8 @@ import info.magnolia.rest.DynamicPath;
  * This endpoint provides a JSON list of existing files in the log folder and
  * also provides the contents of the log file specified as a path parameter.
  *
- * @authors Dan Olaru (IBM) MIHAELA PAPARETE (IBM)
+ * @author Dan Olaru (IBM)
+ * @author MIHAELA PAPARETE (IBM)
  * @since 2020-04-09
  *
  */
@@ -42,79 +43,77 @@ import info.magnolia.rest.DynamicPath;
 @DynamicPath
 public class LogsEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpointDefinition> {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(LogsEndpoint.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LogsEndpoint.class);
 
-	private MagnoliaConfigurationProperties magnoliaProperties;
-	
-	private String baseLogFilePath = "";
+    private MagnoliaConfigurationProperties _magnoliaProperties;
 
-	@Inject
-	protected LogsEndpoint(MonitoringEndpointDefinition endpointDefinition,
-			MagnoliaConfigurationProperties properties) {
+    private String _baseLogFilePath = "";
 
-		super(endpointDefinition);
-		this.magnoliaProperties = properties;
-		
-		baseLogFilePath = magnoliaProperties.getProperty("magnolia.logs.dir");
+    @Inject
+    protected LogsEndpoint(MonitoringEndpointDefinition endpointDefinition,
+            MagnoliaConfigurationProperties properties) {
+        super(endpointDefinition);
+        _magnoliaProperties = properties;
 
-	}
+        _baseLogFilePath = _magnoliaProperties.getProperty("magnolia.logs.dir");
 
-	@GET
-	@Path("")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response availableLogs() {
+    }
 
-		List<LogInfo> logFolderContents = new ArrayList<>();
+    @GET
+    @Path("")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response availableLogs() {
 
-		String pathBase; // = "./monitoring/v1/logs/";
+        List<LogInfo> logFolderContents = new ArrayList<>();
 
-		try {
-			StringBuffer fullURLPath = MgnlContext.getWebContext().getRequest().getRequestURL();
+        // it should be "./monitoring/v1/logs/"
+        String pathBase;
 
-			pathBase = fullURLPath.substring(fullURLPath.indexOf("."));
+        try {
+            StringBuffer fullUrlPath = MgnlContext.getWebContext().getRequest().getRequestURL();
 
-			// ignores other files that might be in the logs folder that don't have the extension ".log"
-			Files.newDirectoryStream(Paths.get(baseLogFilePath), "*.log") 
-					.forEach(f -> {
-						logFolderContents.add(
-								new LogInfo(f.getFileName().toString(), "/" + pathBase + "/" + f.getFileName().toString()));
-					});
+            pathBase = fullUrlPath.substring(fullUrlPath.indexOf("."));
 
-		} catch (IOException e) {
-			LOGGER.error(e.getMessage());
-			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
-		}
+            // ignores other files that might be in the logs folder that don't have the
+            // extension ".log"
+            Files.newDirectoryStream(Paths.get(_baseLogFilePath), "*.log").forEach(f -> {
+                logFolderContents.add(
+                        new LogInfo(f.getFileName().toString(), "/" + pathBase + "/" + f.getFileName().toString()));
+            });
 
-		return Response.status(Status.OK).entity(logFolderContents).build();
-	}
+        } catch (IOException e) {
+            LOGGER.error("An error occurred:", e);
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
 
-	@GET
-	@Path("/{logName}")
-	@Produces(MediaType.TEXT_PLAIN)
-	public Response logs(@PathParam("logName") String logName) {
-		
-		String fullLogFilePath = "";
+        return Response.status(Status.OK).entity(logFolderContents).build();
+    }
 
-		//prepping the strings
-		String uniformLogName = logName.toLowerCase();
+    @GET
+    @Path("/{logName}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response logs(@PathParam("logName") String logName) {
 
-		if (uniformLogName.endsWith(".log"))
-			fullLogFilePath = baseLogFilePath + "/" + uniformLogName;
-		else
-			fullLogFilePath = baseLogFilePath + "/" + uniformLogName + ".log";
+        String fullLogFilePath = "";
 
-		StringBuilder contentBuilder = new StringBuilder();
-		try (Stream<String> stream = Files.lines(Paths.get(fullLogFilePath), StandardCharsets.UTF_8)) {
-			stream.forEach(s -> contentBuilder.append(s).append("\r\n"));
-		} catch (IOException e) {
-			LOGGER.error(e.getMessage());
-			return Response.status(Status.BAD_REQUEST).entity("The specified log file couldn't be found!").build();
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
-		}
+        // preparing the strings
+        String uniformLogName = logName.toLowerCase();
 
-		return Response.status(Status.OK).entity(contentBuilder).build();
-	}
+        if (uniformLogName.endsWith(".log")) {
+            fullLogFilePath = _baseLogFilePath + "/" + uniformLogName;
+        } else {
+            fullLogFilePath = _baseLogFilePath + "/" + uniformLogName + ".log";
+        }
+
+        StringBuilder contentBuilder = new StringBuilder();
+        try (Stream<String> stream = Files.lines(Paths.get(fullLogFilePath), StandardCharsets.UTF_8)) {
+            stream.forEach(s -> contentBuilder.append(s).append("\r\n"));
+        } catch (IOException e) {
+            LOGGER.error("An error occurred:", e);
+            return Response.status(Status.BAD_REQUEST).entity("The specified log file couldn't be found!").build();
+        }
+
+        return Response.status(Status.OK).entity(contentBuilder).build();
+    }
 
 }
