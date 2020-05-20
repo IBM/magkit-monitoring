@@ -29,11 +29,12 @@ import io.micrometer.prometheus.PrometheusMeterRegistry;
 @DynamicPath
 public class PrometheusEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpointDefinition> {
 
-    private final PrometheusMeterRegistry _registry = HttpListener.getRegistry();
+    private final PrometheusMeterRegistry _registry;
 
     @Inject
-    protected PrometheusEndpoint(MonitoringEndpointDefinition endpointDefinition) {
+    protected PrometheusEndpoint(MonitoringEndpointDefinition endpointDefinition, PrometheusMeterRegistry registry) {
         super(endpointDefinition);
+        _registry = registry;
 
     }
 

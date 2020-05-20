@@ -1,0 +1,4 @@
+'prometheus':
+  'class': com.aperto.magkit.monitoring.endpoint.prometheus.PrometheusFilter
+  'enabled': true
+  'jcr:primaryType': mgnl:content

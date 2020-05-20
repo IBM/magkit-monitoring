@@ -14,6 +14,12 @@
       <type>com.fasterxml.jackson.databind.ObjectMapper</type>
       <implementation>com.fasterxml.jackson.databind.ObjectMapper</implementation>
     </component>
+    <component>
+    	<type>io.micrometer.prometheus.PrometheusMeterRegistry</type>
+    	<implementation>com.aperto.magkit.monitoring.endpoint.prometheus.PrometheusMeterRegistryImpl</implementation>
+    	<scope>singleton</scope>
+    	<lazy>true</lazy>
+    </component>
   </components>
 
   <dependencies>
