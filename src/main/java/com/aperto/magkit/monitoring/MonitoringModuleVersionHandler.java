@@ -5,7 +5,7 @@ import java.util.List;
 
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
-import info.magnolia.module.delta.OrderFilterBeforeTask;
+import info.magnolia.module.delta.FilterOrderingTask;
 import info.magnolia.module.delta.Task;
 
 /**
@@ -21,7 +21,7 @@ public class MonitoringModuleVersionHandler extends DefaultModuleVersionHandler 
     @Override
     protected List<Task> getExtraInstallTasks(InstallContext installContext) {
         List<Task> extraInstallTasks = new ArrayList<Task>(super.getExtraInstallTasks(installContext));
-        extraInstallTasks.add(new OrderFilterBeforeTask("prometheus", new String[]{"context"}));
+        extraInstallTasks.add(new FilterOrderingTask("prometheus", new String[]{"contentType"}));
         return extraInstallTasks;
     }
 }
