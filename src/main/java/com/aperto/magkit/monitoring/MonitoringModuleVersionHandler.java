@@ -19,9 +19,9 @@ import info.magnolia.module.delta.Task;
 public class MonitoringModuleVersionHandler extends DefaultModuleVersionHandler {
 
     @Override
-    protected List<Task> getExtraInstallTasks(InstallContext installContext) {
-        List<Task> extraInstallTasks = new ArrayList<Task>(super.getExtraInstallTasks(installContext));
-        extraInstallTasks.add(new FilterOrderingTask("prometheus", new String[]{"contentType"}));
-        return extraInstallTasks;
+    protected List<Task> getStartupTasks(InstallContext installContext) {
+        List<Task> startupTasks = new ArrayList<>(super.getStartupTasks(installContext));
+        startupTasks.add(new FilterOrderingTask("prometheus", new String[]{"contentType"}));
+        return startupTasks;
     }
 }

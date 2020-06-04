@@ -39,37 +39,34 @@ public class PrometheusFilter extends AbstractMgnlFilter {
     @Inject
     public PrometheusFilter(PrometheusMeterRegistry registry) {
         _registry = registry;
-
     }
 
     @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws IOException, ServletException {
 
-        Timer.Sample sample = null;
         final String httpPath = StringUtils.isNotEmpty(request.getRequestURI()) ? request.getRequestURI() : "";
         final String httpStatus = String.valueOf(response.getStatus());
 
-        if (httpPath.contains(REST_PATH)) {
-            sample = Timer.start(_registry);
+        Timer.Sample sample = Timer.start(_registry);
 
-            Counter httpRequestsTotal = Counter.builder(COUNTER_NAME).description(COUNTER_DESCRIPTION)
-                    .tags(TAG_METHOD, request.getMethod(), TAG_STATUS, httpStatus, TAG_URI, httpPath)
-                    .register(_registry);
+        Counter httpRequestsTotal = Counter.builder(COUNTER_NAME)
+                .description(COUNTER_DESCRIPTION)
+                .tags(TAG_METHOD, request.getMethod(), TAG_STATUS, httpStatus, TAG_URI, httpPath)
+                .register(_registry);
 
-            httpRequestsTotal.increment();
-
-        }
-
+        httpRequestsTotal.increment();
+        
         try {
             chain.doFilter(request, response);
         } finally {
-            if (httpPath.contains(REST_PATH)) {
-                sample.stop(_registry,
-                        Timer.builder(TIMER_NAME).description(TIMER_DESCRIPTION)
-                                .tags(TAG_METHOD, request.getMethod(), TAG_STATUS, httpStatus, TAG_URI, httpPath)
-                                .sla(SLA_BUCKETS));
-            }
+
+            sample.stop(_registry,
+                    Timer.builder(TIMER_NAME)
+                            .description(TIMER_DESCRIPTION)
+                            .tags(TAG_METHOD, request.getMethod(), TAG_STATUS, httpStatus, TAG_URI, httpPath)
+                            .serviceLevelObjectives(SLA_BUCKETS));
+
         }
     }
 }
