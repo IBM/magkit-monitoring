@@ -80,6 +80,13 @@
         <resources>
             <!-- Filter all *.properties files within resources directory and keep other files as they are. -->
             <resource>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>**/*.properties</exclude>
+                    <exclude>**/META-INF/magnolia/*.xml</exclude>
+                </excludes>
+            </resource>
+            <resource>
                 <filtering>true</filtering>
                 <directory>src/main/resources</directory>
                 <includes>
