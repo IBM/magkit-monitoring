@@ -37,6 +37,7 @@ The authentication mechanism relies on Magnolias security configuration. Therefo
 | Username  | Password |
 | ------------- | ------------- |
 | monitoring  | jFWVuw2jrkznC7pu  |
+
 **The password should be changed in publicly available environemnts**
 
 
