@@ -6,7 +6,7 @@
   <description>Monitoring Module for Magnolia.</description>
   <class>com.aperto.magkit.monitoring.MonitoringModule</class>
   <versionHandler>com.aperto.magkit.monitoring.MonitoringModuleVersionHandler</versionHandler>
-  <version>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}-${git.commitsCount}</version>
+  <version>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.${git.commitsCount}</version>
 
   <components>
     <id>main</id>
@@ -25,7 +25,7 @@
   <dependencies>
     <dependency>
       <name>core</name>
-      <version>6.1/*</version>
+      <version>6.2/*</version>
     </dependency>
   </dependencies>
 
