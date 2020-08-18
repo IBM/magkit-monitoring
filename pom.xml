@@ -183,14 +183,14 @@
 
     <repositories>
         <repository>
-            <id>aperto.magkit.group</id>
+            <id>acid.magkit.group</id>
             <name>Aperto MagKit Group</name>
             <url>https://acid-repo.aperto.de/repository/magkit/</url>
         </repository>
     </repositories>
     <pluginRepositories>
         <pluginRepository>
-            <id>aperto.magkit.group</id>
+            <id>acid.magkit.group</id>
             <name>Aperto MagKit Group</name>
             <url>https://acid-repo.aperto.de/repository/magkit/</url>
         </pluginRepository>
