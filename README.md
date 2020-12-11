@@ -1,12 +1,15 @@
+[![Build Status](http://acid-build.aperto.de/job/MagKit/job/MagKit-Projekte/job/monitoring/job/dev/badge/icon)](http://acid-build.aperto.de/job/MagKit/job/MagKit-Projekte/job/monitoring/job/dev/)
+
 # Magnolia Monitoring Module
 The Magnolia Monitoring Module provides sever REST endpoints for monitoring the Magnolia application.
+
 ## Resources
 | Resource| Link|
 |-|-|
-| GIT|https://acid-github.aperto.de/magkit/monitoring|
-| Jira      | https://jira.aperto.de/browse/MGKT-520?jql=project%20%3D%20MGKT%20AND%20component%20%3D%20Monitoring|
+|GIT|https://acid-github.aperto.de/magkit/monitoring|
+|Jira|https://jira.aperto.de/browse/MGKT-520?jql=project%20%3D%20MGKT%20AND%20component%20%3D%20Monitoring|
 |Confluence|https://confluence.aperto.de/display/MAGNOLIA/Monitoring+Module|
-| Build | TODO: add Link      |
+|Build|https://acid-build.aperto.de/job/MagKit/job/MagKit-Projekte/job/monitoring/|
 
 ### TL;DR
 Just add this dependency to your Magnolia installation
