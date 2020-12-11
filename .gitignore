@@ -21,3 +21,5 @@ repositories
 src/main/webapp/cache/*
 /build/
 .factoryPath
+/.apt_generated/
+/.apt_generated_tests/
