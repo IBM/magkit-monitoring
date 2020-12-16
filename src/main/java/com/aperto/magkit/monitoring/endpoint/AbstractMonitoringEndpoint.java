@@ -7,9 +7,10 @@ import info.magnolia.rest.AbstractEndpoint;
  * 
  * @author Soenke Schmidt (Aperto - An IBM Company)
  * @since 2020-03-29
+ * @param <D> endpoint definition.
  *
  */
-public abstract class AbstractMonitoringEndpoint<D extends MonitoringEndpointDefinition> extends AbstractEndpoint<D>{
+public abstract class AbstractMonitoringEndpoint<D extends MonitoringEndpointDefinition> extends AbstractEndpoint<D> {
 
     protected AbstractMonitoringEndpoint(D endpointDefinition) {
         super(endpointDefinition);
