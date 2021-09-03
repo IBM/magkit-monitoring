@@ -1,4 +1,4 @@
-@Library('jenkins-library-acid-base-github@0.43.3') _
+@Library('jenkins-library-acid-base-github@latest') _
 pipeline {
 
   agent {
@@ -43,7 +43,7 @@ pipeline {
                 compile: mavenCompile,
                 deploy: mavenDeploy,
                 params: mavenParams,
-                suppressionsEnabled: false
+                executeDependencyCheck: false
               ]
             )
           }
@@ -75,7 +75,7 @@ pipeline {
                 compile: mavenCompile,
                 deploy: mavenDeploy,
                 params: mavenParams,
-                suppressionsEnabled: false
+                executeDependencyCheck: false
               ]
             )
           }
