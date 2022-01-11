@@ -34,18 +34,10 @@ pipeline {
             ]]
           ]
           wrap([$class: 'VaultBuildWrapper', vaultSecrets: secrets]) {
-            def mavenCompile = false
-            def mavenDeploy = false
-            def mavenParams = "clean verify --batch-mode -U -Duser=$DEPLOY_USERNAME -Dpw=$DEPLOY_PASSWORD"
-
-            acidExecuteMaven(this, [
-                configFileId: '5ff62c62-4015-4854-8ab8-29bd275a1a92',
-                compile: mavenCompile,
-                deploy: mavenDeploy,
-                params: mavenParams,
-                executeDependencyCheck: false
-              ]
-            )
+            def mavenParams = "clean verify -U -Duser=$DEPLOY_USERNAME -Dpw=$DEPLOY_PASSWORD"
+            withMaven {
+              sh "mvn $mavenParams"
+            }
           }
         }
       }
@@ -66,18 +58,10 @@ pipeline {
             ]]
           ]
           wrap([$class: 'VaultBuildWrapper', vaultSecrets: secrets]) {
-            def mavenCompile = false
-            def mavenDeploy = true
-            def mavenParams = " --batch-mode -U -Duser=$DEPLOY_USERNAME -Dpw=$DEPLOY_PASSWORD"
-
-            acidExecuteMaven(this, [
-                configFileId: '5ff62c62-4015-4854-8ab8-29bd275a1a92',
-                compile: mavenCompile,
-                deploy: mavenDeploy,
-                params: mavenParams,
-                executeDependencyCheck: false
-              ]
-            )
+            def mavenParams = "clean deploy -U -Duser=$DEPLOY_USERNAME -Dpw=$DEPLOY_PASSWORD"
+            withMaven {
+              sh "mvn $mavenParams"
+            }
           }
         }
       }
