@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.aperto.magkit</groupId>
     <artifactId>monitoring</artifactId>
-    <version>1.1.0-SNAPSHOT</version>
+    <version>1.0.1</version>
     <name>Aperto MagKit Monitoring</name>
 
     <properties>
@@ -219,35 +219,35 @@
     </build>
 
     <scm>
-        <connection>scm:git:https://acid-github.aperto.de/magkit/monitoring.git</connection>
-        <developerConnection>scm:git:https://acid-github.aperto.de/magkit/monitoring.git</developerConnection>
-        <url>scm:git:https://acid-github.aperto.de/magkit/monitoring.git</url>
+        <connection>scm:git:https://github.ibmix.de/magkit/monitoring.git</connection>
+        <developerConnection>scm:git:https://github.ibmix.de/magkit/monitoring.git</developerConnection>
+        <url>scm:git:https://github.ibmix.de/magkit/monitoring.git</url>
     </scm>
 
 
     <repositories>
         <repository>
-            <id>acid.magkit.group</id>
+            <id>ibmix.magkit.group</id>
             <name>Aperto MagKit Group</name>
-            <url>https://acid-repo.aperto.de/repository/magkit/</url>
+            <url>https://nexus.ibmix.de/repository/magkit/</url>
         </repository>
     </repositories>
     <pluginRepositories>
         <pluginRepository>
-            <id>acid.magkit.group</id>
+            <id>ibmix.magkit.group</id>
             <name>Aperto MagKit Group</name>
-            <url>https://acid-repo.aperto.de/repository/magkit/</url>
+            <url>https://nexus.ibmix.de/repository/magkit/</url>
         </pluginRepository>
     </pluginRepositories>
 
     <distributionManagement>
         <snapshotRepository>
             <id>acid.magkit.snapshots</id>
-            <url>https://acid-repo.aperto.de/repository/magkit.snapshots/</url>
+            <url>https://nexus.ibmix.de/repository/magkit.snapshots/</url>
         </snapshotRepository>
         <repository>
             <id>acid.magkit.releases</id>
-            <url>https://acid-repo.aperto.de/repository/magkit.releases/</url>
+            <url>https://nexus.ibmix.de/repository/magkit.releases/</url>
         </repository>
     </distributionManagement>
 
