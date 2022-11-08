@@ -13,7 +13,6 @@ public class PrometheusMeterRegistryImpl extends PrometheusMeterRegistry{
 
     public PrometheusMeterRegistryImpl() {
         super(PrometheusConfig.DEFAULT);
-        // TODO Auto-generated constructor stub
     }
 
 }
