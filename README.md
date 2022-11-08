@@ -1,10 +1,11 @@
-[![Build Status](https://jenkins.ibmix.de/job/MagKit/job/MagKit-Projekte/job/monitoring/job/dev/badge/icon?subject=DEV&style=flat-square)](https://jenkins.ibmix.de/job/MagKit/job/MagKit-Projekte/job/monitoring/job/dev/)[![Build Status](https://jenkins.ibmix.de/job/MagKit/job/MagKit-Projekte/job/monitoring/job/master/badge/icon?subject=MASTER&style=flat-square)](https://jenkins.ibmix.de/job/MagKit/job/MagKit-Projekte/job/monitoring/job/master/)
+[![Build Status](https://jenkins.ibmix.de/job/MagKit/job/MagKit-Projekte/job/monitoring/job/dev/badge/icon?subject=DEV&style=flat-square)](https://jenkins.ibmix.de/job/MagKit/job/MagKit-Projekte/job/monitoring/job/dev/) [![Build Status](https://jenkins.ibmix.de/job/MagKit/job/MagKit-Projekte/job/monitoring/job/master/badge/icon?subject=MASTER&style=flat-square)](https://jenkins.ibmix.de/job/MagKit/job/MagKit-Projekte/job/monitoring/job/master/)
 
 # Magnolia Monitoring Module
 The Magnolia Monitoring Module provides sever REST endpoints for monitoring the Magnolia application.
 
 > **:warning: WARNING:** This module registers a filter in the Magnolia Filter Chain. \
-> When uninstalling this module make sure to remove the filter beforehand. Otherwise Magnolia might not be able to start up again.
+> When uninstalling this module make sure to remove the filter beforehand. Otherwise Magnolia might not be able to start up again.\
+> The filter is called **prometheus**
 
 ## Resources
 | Resource| Link|
@@ -36,7 +37,7 @@ Just add this dependency to your Magnolia installation
 |`threaddump`|`/.rest/monitoring/v1/threaddump`|Provides a thread dump|
 |`heapdump`|`/.rest/monitoring/v1/heapdump`|Provides a heap dump|
 |`logs`|`/.rest/monitoring/v1/logs/{logfile}`|Provides the contents of the specified log file|
-|`prometheus`|`/.rest/monitoring/prometheus`|Provides information from the *Prometheus Exporter*. Use this endpoint to scrape time series data for Prometheus.
+|`prometheus`|`/.rest/monitoring/v1/prometheus`|Provides information from the *Prometheus Exporter*. Use this endpoint to scrape time series data for Prometheus.
 
 ## Authentication
 > **:warning: WARNING:** Access to the endpoints is controlled by the Magnolia Security App! \
