@@ -11,9 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import info.magnolia.cms.filters.AbstractMgnlFilter;
 import io.micrometer.core.instrument.Counter;
-import io.micrometer.core.instrument.Timer;
-import io.micrometer.core.instrument.util.StringUtils;
+import io.micrometer.core.instrument.LongTaskTimer;
 import io.micrometer.prometheus.PrometheusMeterRegistry;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Prometheus Filter class.
@@ -30,9 +30,7 @@ public class PrometheusFilter extends AbstractMgnlFilter {
     private static final String TAG_METHOD = "method";
     private static final String TAG_STATUS = "status";
     private static final String TAG_URI = "uri";
-    private static final String REST_PATH = ".rest";
-    private static final Duration[] SLA_BUCKETS = { Duration.ofMillis(100), Duration.ofMillis(500),
-            Duration.ofMillis(1000), Duration.ofMillis(10000) };
+    private static final Duration[] SLA_BUCKETS = { Duration.ofMillis(100), Duration.ofMillis(500), Duration.ofMillis(1000), Duration.ofMillis(5000) };
 
     private final PrometheusMeterRegistry _registry;
 
@@ -42,31 +40,31 @@ public class PrometheusFilter extends AbstractMgnlFilter {
     }
 
     @Override
-    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-            throws IOException, ServletException {
+    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
 
         final String httpPath = StringUtils.isNotEmpty(request.getRequestURI()) ? request.getRequestURI() : "";
         final String httpStatus = String.valueOf(response.getStatus());
 
-        Timer.Sample sample = Timer.start(_registry);
+        LongTaskTimer httpProcessingTimer = LongTaskTimer.builder(TIMER_NAME)
+            .description(TIMER_DESCRIPTION)
+            .tags(TAG_METHOD, request.getMethod(), TAG_STATUS, httpStatus, TAG_URI, httpPath)
+            .serviceLevelObjectives(SLA_BUCKETS)
+            .register(_registry);
 
-        Counter httpRequestsTotal = Counter.builder(COUNTER_NAME)
-                .description(COUNTER_DESCRIPTION)
-                .tags(TAG_METHOD, request.getMethod(), TAG_STATUS, httpStatus, TAG_URI, httpPath)
-                .register(_registry);
+        LongTaskTimer.Sample currentRequestSample = httpProcessingTimer.start();
 
-        httpRequestsTotal.increment();
-        
+        Counter httpRequestCounter = Counter.builder(COUNTER_NAME)
+            .description(COUNTER_DESCRIPTION)
+            .tags(TAG_METHOD, request.getMethod(), TAG_STATUS, httpStatus, TAG_URI, httpPath)
+            .register(_registry);
+
+        httpRequestCounter.increment();
+
         try {
             chain.doFilter(request, response);
         } finally {
-
-            sample.stop(_registry,
-                    Timer.builder(TIMER_NAME)
-                            .description(TIMER_DESCRIPTION)
-                            .tags(TAG_METHOD, request.getMethod(), TAG_STATUS, httpStatus, TAG_URI, httpPath)
-                            .serviceLevelObjectives(SLA_BUCKETS));
-
+            currentRequestSample.stop();
         }
+
     }
 }

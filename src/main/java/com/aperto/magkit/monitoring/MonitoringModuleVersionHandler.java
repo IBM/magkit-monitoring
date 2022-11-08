@@ -47,7 +47,7 @@ public class MonitoringModuleVersionHandler extends DefaultModuleVersionHandler 
     @Override
     protected List<Task> getStartupTasks(InstallContext installContext) {
         List<Task> startupTasks = new ArrayList<>(super.getStartupTasks(installContext));
-        startupTasks.add(new FilterOrderingTask("prometheus", new String[]{"contentType"}));
+        startupTasks.add(new FilterOrderingTask("prometheus", new String[] { "contentType" }));
         return startupTasks;
     }
 }
