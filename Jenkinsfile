@@ -33,9 +33,9 @@ pipeline {
     stage('Verify PR') {
       when {
         branch 'PR-*'
-      }
-      expression {
-        params.INPUT_ENV != 'Release'
+        expression {
+          params.INPUT_ENV != 'Release'
+        }
       }
       steps {
         script {
