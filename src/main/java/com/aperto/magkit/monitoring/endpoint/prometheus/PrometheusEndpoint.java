@@ -10,19 +10,13 @@ import com.aperto.magkit.monitoring.endpoint.AbstractMonitoringEndpoint;
 import com.aperto.magkit.monitoring.endpoint.MonitoringEndpointDefinition;
 
 import info.magnolia.rest.DynamicPath;
-import io.micrometer.core.instrument.binder.jvm.ClassLoaderMetrics;
-import io.micrometer.core.instrument.binder.jvm.JvmGcMetrics;
-import io.micrometer.core.instrument.binder.jvm.JvmMemoryMetrics;
-import io.micrometer.core.instrument.binder.jvm.JvmThreadMetrics;
-import io.micrometer.core.instrument.binder.logging.Log4j2Metrics;
-import io.micrometer.core.instrument.binder.system.ProcessorMetrics;
-import io.micrometer.core.instrument.binder.system.UptimeMetrics;
 import io.micrometer.prometheus.PrometheusMeterRegistry;
 
 /**
  * Prometheus endpoint class.
  * 
  * @author VladNacu
+ * @author Sönke Schmidt - IBM iX
  *
  */
 @Path("")
@@ -38,24 +32,11 @@ public class PrometheusEndpoint extends AbstractMonitoringEndpoint<MonitoringEnd
 
     }
 
-    private void init() {
-        new JvmThreadMetrics().bindTo(_registry);
-        new JvmGcMetrics().bindTo(_registry);
-        new JvmMemoryMetrics().bindTo(_registry);
-        new ProcessorMetrics().bindTo(_registry);
-        new UptimeMetrics().bindTo(_registry);
-        new ClassLoaderMetrics().bindTo(_registry);
-        new Log4j2Metrics().bindTo(_registry);
-    }
-
     @GET
     @Path("")
     @Produces(MediaType.TEXT_PLAIN)
     public String prometheus() {
-        init();
         return _registry.scrape();
-
     }
-
 
 }

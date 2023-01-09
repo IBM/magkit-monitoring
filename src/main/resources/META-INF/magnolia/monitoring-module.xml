@@ -7,22 +7,18 @@
   <class>com.aperto.magkit.monitoring.MonitoringModule</class>
   <versionHandler>com.aperto.magkit.monitoring.MonitoringModuleVersionHandler</versionHandler>
   <version>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.${git.commitsCount}</version>
-
   <components>
     <id>main</id>
     <component>
-    	<type>io.micrometer.prometheus.PrometheusMeterRegistry</type>
-    	<implementation>com.aperto.magkit.monitoring.endpoint.prometheus.PrometheusMeterRegistryImpl</implementation>
-    	<scope>singleton</scope>
-    	<lazy>true</lazy>
+      <type>io.micrometer.prometheus.PrometheusMeterRegistry</type>
+      <provider>com.aperto.magkit.monitoring.endpoint.prometheus.PrometheusMeterRegistryProvider</provider>
+      <scope>singleton</scope>
     </component>
   </components>
-
   <dependencies>
     <dependency>
       <name>core</name>
       <version>6.2/*</version>
     </dependency>
   </dependencies>
-
 </module>
