@@ -1,3 +1,4 @@
+
 [![Build Status](https://jenkins.ibmix.de/job/MagKit/job/MagKit-Projekte/job/monitoring/job/dev/badge/icon?subject=DEV&style=flat-square)](https://jenkins.ibmix.de/job/MagKit/job/MagKit-Projekte/job/monitoring/job/dev/) [![Build Status](https://jenkins.ibmix.de/job/MagKit/job/MagKit-Projekte/job/monitoring/job/master/badge/icon?subject=MASTER&style=flat-square)](https://jenkins.ibmix.de/job/MagKit/job/MagKit-Projekte/job/monitoring/job/master/)
 
 # Magnolia Monitoring Module
@@ -21,7 +22,7 @@ Just add this dependency to your Magnolia installation
 <dependency>
   <groupId>com.aperto.magkit</groupId>
   <artifactId>monitoring</artifactId>
-  <version>1.0.1</version>
+  <version>1.1.0</version>
 </dependency>
 ```
 
@@ -51,4 +52,52 @@ The authentication mechanism relies on Magnolias security configuration. Therefo
 
 **The password should be changed after the initial setup**
 
+## Prometheus Configuration
+The prometheus endpoint exposes information as time series data identified by metric name and key/value pairs. The metrics are exposed using a simple format.
+The _Monitoring Module_ provides a set of basic metrics (based on [micrometer](https://micrometer.io/)) that can be enabled or disabled via configuration. In order to configure the exposed metrics the following _optional_ properties can be used:
+
+<table>
+    <tr>
+        <th>Property Name</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td><b>magnolia.monitoring.prometheus.metrics</b></td>
+        <td>
+            Comma Seperated list of metric collectors. The following metric collectors can be selected to expose their metrics via the prometheus endpoint:
+            <ul>
+                <li>Uptime</li>
+                <li>Processor</li>
+                <li>FileDescriptor</li>
+                <li>JvmInfo</li>
+                <li>JvmHeapPressure</li>
+                <li>JvmThread</li>
+                <li>JvmGc</li>
+                <li>ClassLoader</li>
+                <li>Log4J2</li>
+                <li>Http</li>
+            </ul>
+            The <i>Uptime</i> Metric is enabled by default.
+        </td>
+    </tr>
+    <tr>
+        <td><b>magnolia.monitoring.prometheus.http.uris</b></td>
+        <td>
+            The <b><i>Http Collector</i></b> exposes information about the http requests processed by Magnolia. By default the exposed metrics <b>do not</b> distinguish by the URI of the request.<br/>
+            In order to get metrics for a <b>specific URI</b>, the URI has to be added to this comma separated list.<br/>(It is also possible to use a regular expression to collect metrics for multiple URIs.) E.g.<br/>
+            <pre>
+/author/.magnolia/.*,/.rest/custom-endpoint
+            </pre>
+        </td>
+    </tr>
+    <tr>
+        <td><b>magnolia.monitoring.prometheus.http.slo</b></td>
+        <td>
+            Comma separated list of <b><i>Service Level Objects</i></b> for the <i>Http Metric Collector</i>. Configuring SLOs creates exposes the http request duration as histograms, effectively sorting the request durations into buckets that are defined by the SLOs. The time unit of the SLOs is in milliseconds. E.g.:<br/>
+            <pre>
+100,1000,5000
+            </pre>
+        </td>
+   </tr>
+</table>
 
