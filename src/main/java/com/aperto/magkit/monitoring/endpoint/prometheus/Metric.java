@@ -12,6 +12,7 @@ import io.micrometer.core.instrument.binder.jvm.JvmThreadMetrics;
 import io.micrometer.core.instrument.binder.logging.Log4j2Metrics;
 import io.micrometer.core.instrument.binder.system.FileDescriptorMetrics;
 import io.micrometer.core.instrument.binder.system.ProcessorMetrics;
+import io.micrometer.core.instrument.binder.system.UptimeMetrics;
 
 /**
  * 
@@ -22,7 +23,8 @@ import io.micrometer.core.instrument.binder.system.ProcessorMetrics;
  *
  */
 public enum Metric {
-
+    
+    UPTIME("Uptime", UptimeMetrics.class),
     PROCESSOR("Processor", ProcessorMetrics.class),
     FILE_DESCRIPTOR("FileDescriptor", FileDescriptorMetrics.class),
     JVM_INFO("JvmInfo", JvmInfoMetrics.class),

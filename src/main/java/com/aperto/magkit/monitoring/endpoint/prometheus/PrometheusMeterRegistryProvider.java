@@ -16,7 +16,6 @@ import com.aperto.magkit.monitoring.MonitoringModule;
 import io.micrometer.core.instrument.Meter.Id;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tag;
-import io.micrometer.core.instrument.binder.system.UptimeMetrics;
 import io.micrometer.core.instrument.config.MeterFilter;
 import io.micrometer.core.instrument.distribution.DistributionStatisticConfig;
 import io.micrometer.prometheus.PrometheusConfig;
@@ -56,9 +55,6 @@ public class PrometheusMeterRegistryProvider implements Provider<PrometheusMeter
     }
 
     protected void bindMetrics(MeterRegistry registry) {
-
-        new UptimeMetrics().bindTo(registry);
-
         List<String> metricIds = getMetricIds();
         for (String metricId : metricIds) {
             Optional<Metric> metric = Metric.getById(metricId);

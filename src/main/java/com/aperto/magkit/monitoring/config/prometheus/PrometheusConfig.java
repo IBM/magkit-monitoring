@@ -7,8 +7,6 @@ import javax.inject.Named;
 
 import com.google.inject.Inject;
 
-import static java.util.Collections.emptyList;
-
 /**
  * 
  * Configuration bean for Prometheus Registry and respective metrics.
@@ -19,7 +17,7 @@ import static java.util.Collections.emptyList;
  */
 public class PrometheusConfig {
 
-    private List<String> _metrics = emptyList();
+    private List<String> _metrics = List.of("Uptime", "Processor", "JvmThread", "JvmGc", "JvmMemory", "ClassLoader", "Log4J2");
 
     @Inject
     private HttpRequestMetricsConfig _httpRequestMetricsConfig;
