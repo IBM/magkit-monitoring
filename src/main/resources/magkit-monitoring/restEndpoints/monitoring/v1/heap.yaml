@@ -1,0 +1,2 @@
+class: de.ibmix.magkit.monitoring.endpoint.ConfiguredMonitoringEndpointDefinition
+implementationClass: de.ibmix.magkit.monitoring.endpoint.heap.HeapDumpEndpoint

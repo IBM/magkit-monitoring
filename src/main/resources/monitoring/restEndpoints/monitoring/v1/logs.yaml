@@ -1,2 +1,0 @@
-class: com.aperto.magkit.monitoring.endpoint.ConfiguredMonitoringEndpointDefinition
-implementationClass: com.aperto.magkit.monitoring.endpoint.logs.LogsEndpoint
