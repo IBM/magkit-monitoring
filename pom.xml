@@ -29,6 +29,7 @@
             <groupId>info.magnolia</groupId>
             <artifactId>magnolia-license</artifactId>
             <version>${version.magnolia.license}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>info.magnolia.rest</groupId>
@@ -50,10 +51,9 @@
 
     <repositories>
         <repository>
-            <id>magnolia.community</id>
-            <name>Magnolia Public Repository</name>
-            <url>https://nexus.magnolia-cms.com/content/groups/public/</url>
+            <id>magnolia.enterprise</id>
+            <name>Magnolia Enterprise Group</name>
+            <url>https://nexus.magnolia-cms.com/content/groups/enterprise/</url>
         </repository>
     </repositories>
-
 </project>
