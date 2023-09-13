@@ -4,10 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-## [0.0.1] - 2019-02-15
+- migrate the project to IBM open source GitHub
 
-### Added
-- Added a changelog
+## [1.1.0] - 2023-01-11
 
-[unreleased]: https://github.com/ibm/repo-template/compare/v0.0.1...HEAD
-[0.0.1]: https://github.com/ibm/repo-template/releases/tag/v0.0.1
+### Changed
+- Migrate UI and app support to Magnolia 6.2 standard
+
+[unreleased]: https://github.com/IBM/magkit-monitoring/compare/magnolia-monitoring-1.6.0...HEAD
+[1.6.0]: https://github.com/IBM/magkit-monitoring/releases/tag/magnolia-monitoring-1.6.0
