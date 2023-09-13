@@ -24,7 +24,7 @@ package de.ibmix.magkit.monitoring.endpoint.health;
  *
  * Health Pojo.
  *
- * @author Soenke Schmidt (Aperto - An IBM Company)
+ * @author Soenke Schmidt (IBM iX)
  * @since 2020-03-29
  *
  */

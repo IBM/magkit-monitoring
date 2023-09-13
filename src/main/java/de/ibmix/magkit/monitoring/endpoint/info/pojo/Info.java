@@ -24,7 +24,7 @@ package de.ibmix.magkit.monitoring.endpoint.info.pojo;
  *
  * Info POJO.
  *
- * @author CLAUDIU GONCIULEA (Aperto - An IBM Company)
+ * @author CLAUDIU GONCIULEA (IBM iX)
  * @since 2020-04-09
  *
  */
