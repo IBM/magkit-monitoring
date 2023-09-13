@@ -1,3 +1,3 @@
 # MAINTAINERS
 
-Frank Sommer - frank.sommer1@ibm.com
+Christopher Ferris - chrisfer@us.ibm.com
