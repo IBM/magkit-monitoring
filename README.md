@@ -1,22 +1,46 @@
-
-[![Build Status](https://jenkins.ibmix.de/job/MagKit/job/MagKit-Projekte/job/monitoring/job/dev/badge/icon?subject=DEV&style=flat-square)](https://jenkins.ibmix.de/job/MagKit/job/MagKit-Projekte/job/monitoring/job/dev/) [![Build Status](https://jenkins.ibmix.de/job/MagKit/job/MagKit-Projekte/job/monitoring/job/master/badge/icon?subject=MASTER&style=flat-square)](https://jenkins.ibmix.de/job/MagKit/job/MagKit-Projekte/job/monitoring/job/master/)
-
 # Magnolia Monitoring Module
 The Magnolia Monitoring Module provides several REST endpoints for monitoring the Magnolia application.
+[![build-module](https://github.com/IBM/magkit-monitoring/actions/workflows/build.yaml/badge.svg)](https://github.com/IBM/magkit-monitoring/actions/workflows/build.yaml)
 
 > **:warning: WARNING:** This module registers a filter in the Magnolia Filter Chain. \
 > When uninstalling this module make sure to remove the filter beforehand. Otherwise Magnolia might not be able to start up again.\
 > The filter is called **prometheus**
 
-## Resources
-| Resource| Link|
-|-|-|
-|GIT|https://github.ibmix.de/magkit/monitoring|
-|Jira|https://jira.ibmix.de/browse/MGKT-520?jql=project%20%3D%20MGKT%20AND%20component%20%3D%20Monitoring|
-|Confluence|https://confluence.ibmix.de/display/MAGNOLIA/Monitoring+Module|
-|Build|https://jenkins.ibmix.de/job/MagKit/job/MagKit-Projekte/job/monitoring/|
+## Scope
 
-### TL;DR
+A [module](https://documentation.magnolia-cms.com/display/DOCS/Modules) containing an [app](https://documentation.magnolia-cms.com/display/DOCS/Apps) for the [Magnolia CMS](http://www.magnolia-cms.com)
+
+## Usage
+
+This repository contains some example best practices for open source repositories:
+
+* [LICENSE](LICENSE)
+* [README.md](README.md)
+* [CONTRIBUTING.md](CONTRIBUTING.md)
+* [MAINTAINERS.md](MAINTAINERS.md)
+<!-- A Changelog allows you to track major changes and things that happen, https://github.com/github-changelog-generator/github-changelog-generator can help automate the process -->
+* [CHANGELOG.md](CHANGELOG.md)
+
+### Issue tracking
+
+Issues are tracked at [GitHub](https://github.com/IBM/magkit-monitoring/issues).
+
+Any bug reports, improvement or feature pull requests are very welcome!
+Make sure your patches are well tested. Ideally create a topic branch for every separate change you make.
+For example:
+
+1. Fork the repo
+2. Create your feature branch (`git checkout -b my-new-feature`)
+3. Commit your changes (`git commit -am 'Added some feature'`)
+4. Push to the branch (`git push origin my-new-feature`)
+5. Create new Pull Request
+
+### Maven artifacts in Magnolia's Nexus
+
+The code is built by [GitHub actions](https://github.com/IBM/magkit-monitoring/actions/workflows/build.yaml).
+You can browse available artifacts through [Magnolia's Nexus](https://nexus.magnolia-cms.com/#nexus-search;quick~magnolia-monitoring)
+
+### Maven dependency
 Just add this dependency to your Magnolia installation
 ```xml
 <dependency>
@@ -33,6 +57,26 @@ If you need old version als 1.1.1 then use
     <version>1.x.x</version>
 </dependency>
 ```
+
+## License
+
+All source files must include a Copyright and License header. The SPDX license header is
+preferred because it can be easily scanned.
+
+If you would like to see the detailed LICENSE click [here](LICENSE).
+
+```text
+#
+# Copyright 2020- IBM Inc. All rights reserved
+# SPDX-License-Identifier: Apache2.0
+#
+```
+## Authors
+
+Optionally, you may include a list of authors, though this is redundant with the built-in
+GitHub list of contributors.
+
+- Author: Frank Sommer <frank.sommer1@ibm.com>
 
 ## Endpoints
 |ID|Endpoint|Description|
