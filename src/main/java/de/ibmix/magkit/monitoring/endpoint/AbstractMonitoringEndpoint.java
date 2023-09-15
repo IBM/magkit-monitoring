@@ -25,7 +25,7 @@ import info.magnolia.rest.AbstractEndpoint;
 /**
  * Abstract Endpoint. Should be implemented by all other Monitoring Endpoints.
  *
- * @author Soenke Schmidt (Aperto - An IBM Company)
+ * @author Soenke Schmidt (IBM iX)
  * @since 2020-03-29
  * @param <D> endpoint definition.
  *

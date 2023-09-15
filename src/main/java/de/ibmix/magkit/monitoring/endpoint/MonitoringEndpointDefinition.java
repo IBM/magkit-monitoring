@@ -26,7 +26,7 @@ import info.magnolia.rest.EndpointDefinition;
  *
  * Definition of a Monitoring Endpoint.
  *
- * @author Soenke Schmidt (Aperto - An IBM Company)
+ * @author Soenke Schmidt (IBM iX)
  * @since 2020-03-31
  *
  */

@@ -46,7 +46,7 @@ import info.magnolia.rest.DynamicPath;
  *
  * Info Endpoint.
  *
- * @author CLAUDIU GONCIULEA (Aperto - An IBM Company)
+ * @author CLAUDIU GONCIULEA (IBM iX)
  * @since 2020-04-09
  *
  */
