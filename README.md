@@ -1,14 +1,14 @@
-# Magnolia Monitoring Module
-The Magnolia Monitoring Module provides several REST endpoints for monitoring the Magnolia application.
 [![build-module](https://github.com/IBM/magkit-monitoring/actions/workflows/build.yaml/badge.svg)](https://github.com/IBM/magkit-monitoring/actions/workflows/build.yaml)
+
+# Magnolia Monitoring Module
+
+## Scope
+
+The Magnolia Monitoring Module provides several REST endpoints for monitoring the Magnolia application.
 
 > **:warning: WARNING:** This module registers a filter in the Magnolia Filter Chain. \
 > When uninstalling this module make sure to remove the filter beforehand. Otherwise Magnolia might not be able to start up again.\
 > The filter is called **prometheus**
-
-## Scope
-
-A [module](https://documentation.magnolia-cms.com/display/DOCS/Modules) containing an [app](https://documentation.magnolia-cms.com/display/DOCS/Apps) for the [Magnolia CMS](http://www.magnolia-cms.com)
 
 ## Usage
 
@@ -71,12 +71,6 @@ If you would like to see the detailed LICENSE click [here](LICENSE).
 # SPDX-License-Identifier: Apache2.0
 #
 ```
-## Authors
-
-Optionally, you may include a list of authors, though this is redundant with the built-in
-GitHub list of contributors.
-
-- Author: Frank Sommer <frank.sommer1@ibm.com>
 
 ## Endpoints
 |ID|Endpoint|Description|
