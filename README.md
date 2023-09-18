@@ -87,8 +87,8 @@ GitHub list of contributors.
 |`info`|`/.rest/monitoring/v1/info`|Provides general information about the Magnolia Application and environment|
 |`modules`|`/.rest/monitoring/v1/modules`|Provides a list of all installed Magnolia Modules and their respective version|
 |`metrics`|`/.rest/monitoring/v1/metrics`|Provides general information about the JVM runtime|
-|`threaddump`|`/.rest/monitoring/v1/threaddump`|Provides a thread dump|
-|`heapdump`|`/.rest/monitoring/v1/heapdump`|Provides a heap dump|
+|`threaddump`|`/.rest/monitoring/v1/thread`|Provides a thread dump|
+|`heapdump`|`/.rest/monitoring/v1/heap`|Provides a heap dump|
 |`logs`|`/.rest/monitoring/v1/logs/{logfile}`|Provides the contents of the specified log file|
 |`prometheus`|`/.rest/monitoring/v1/prometheus`|Provides information from the *Prometheus Exporter*. Use this endpoint to scrape time series data for Prometheus.
 
