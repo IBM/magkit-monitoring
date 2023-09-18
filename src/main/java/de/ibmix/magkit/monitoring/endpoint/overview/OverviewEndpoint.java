@@ -94,8 +94,7 @@ public class OverviewEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpo
                 // we don't want to list our own Overview endpoint among the found endpoints;
                 // every other endpoint that implements or extends
                 // ConfiguredMonitoringEndpointDefinition is however added to the list
-                boolean isThisOurOverviewEndpoint = (p.getMetadata().getModule().equals("monitoring"))
-                        && ("overview".equals(name));
+                boolean isThisOurOverviewEndpoint = (p.getMetadata().getModule().equals("magkit-monitoring")) && ("overview".equals(name));
 
                 if (!isThisOurOverviewEndpoint) {
 
