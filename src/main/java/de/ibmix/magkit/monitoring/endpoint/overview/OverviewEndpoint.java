@@ -20,8 +20,11 @@ package de.ibmix.magkit.monitoring.endpoint.overview;
  * #L%
  */
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import de.ibmix.magkit.monitoring.endpoint.AbstractMonitoringEndpoint;
+import de.ibmix.magkit.monitoring.endpoint.ConfiguredMonitoringEndpointDefinition;
+import de.ibmix.magkit.monitoring.endpoint.MonitoringEndpointDefinition;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.rest.registry.EndpointDefinitionRegistry;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -30,26 +33,19 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-
-import de.ibmix.magkit.monitoring.endpoint.AbstractMonitoringEndpoint;
-import de.ibmix.magkit.monitoring.endpoint.ConfiguredMonitoringEndpointDefinition;
-import de.ibmix.magkit.monitoring.endpoint.MonitoringEndpointDefinition;
-
-import info.magnolia.rest.registry.EndpointDefinitionRegistry;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- *
  * Overview Endpoint.
  *
  * @author Dan Olaru (IBM)
  * @since 2020-04-24
- *
  */
-
 @Path("/monitoring")
 public class OverviewEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpointDefinition> {
 
-    private EndpointDefinitionRegistry _registry;
+    private final EndpointDefinitionRegistry _registry;
 
     @Inject
     protected OverviewEndpoint(MonitoringEndpointDefinition endpointDefinition, EndpointDefinitionRegistry registry) {
@@ -62,8 +58,8 @@ public class OverviewEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpo
     @Path("")
     @Produces(MediaType.APPLICATION_JSON)
     public Response overview() {
-
         Overview endpointsOverview = new Overview();
+        String uriPath = MgnlContext.getWebContext().getRequest().getRequestURI();
 
         _registry.getAllProviders().forEach(p -> {
 
@@ -72,15 +68,12 @@ public class OverviewEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpo
             // p.get() ------------------> EndpointDefinition endpointDefinition
 
             if (p.get() instanceof ConfiguredMonitoringEndpointDefinition) {
-
                 // "path"
-                String endpointPath = "/.rest/" + p.getMetadata().getReferenceId();
-
+                String endpointPath = uriPath.replace("monitoring", p.getMetadata().getReferenceId());
                 String[] refIdElements = p.getMetadata().getReferenceId().split("/");
 
-                String version = "";
-                String name = "";
-
+                String version;
+                String name;
                 if (refIdElements.length == 3) {
                     // the endpoint is versioned: "monitoring" + version + moduleName
                     version = refIdElements[1];
@@ -97,16 +90,13 @@ public class OverviewEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpo
                 boolean isThisOurOverviewEndpoint = (p.getMetadata().getModule().equals("magkit-monitoring")) && ("overview".equals(name));
 
                 if (!isThisOurOverviewEndpoint) {
-
                     EndpointInfo myEndpoint = new EndpointInfo(name, endpointPath);
-                    if (endpointsOverview.getCategorizedEndpoints().keySet().contains(version)) {
+                    if (endpointsOverview.getCategorizedEndpoints().containsKey(version)) {
                         endpointsOverview.getCategorizedEndpoints().get(version).add(myEndpoint);
                     } else {
-                        endpointsOverview.getCategorizedEndpoints().put(version,
-                                new ArrayList<EndpointInfo>(Arrays.asList(myEndpoint)));
+                        endpointsOverview.getCategorizedEndpoints().put(version, new ArrayList<>(List.of(myEndpoint)));
                     }
                 }
-
             }
         });
 

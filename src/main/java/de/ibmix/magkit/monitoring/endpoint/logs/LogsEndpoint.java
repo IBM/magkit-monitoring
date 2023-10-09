@@ -20,13 +20,13 @@ package de.ibmix.magkit.monitoring.endpoint.logs;
  * #L%
  */
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Stream;
+import de.ibmix.magkit.monitoring.endpoint.AbstractMonitoringEndpoint;
+import de.ibmix.magkit.monitoring.endpoint.MonitoringEndpointDefinition;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.init.MagnoliaConfigurationProperties;
+import info.magnolia.rest.DynamicPath;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -36,70 +36,50 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
 
-import de.ibmix.magkit.monitoring.endpoint.AbstractMonitoringEndpoint;
-import de.ibmix.magkit.monitoring.endpoint.MonitoringEndpointDefinition;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import info.magnolia.context.MgnlContext;
-import info.magnolia.init.MagnoliaConfigurationProperties;
-import info.magnolia.rest.DynamicPath;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * LogsEndpoint.
- *
+ * <p>
  * This endpoint provides a JSON list of existing files in the log folder and
  * also provides the contents of the log file specified as a path parameter.
  *
  * @author Dan Olaru (IBM)
  * @author MIHAELA PAPARETE (IBM)
  * @since 2020-04-09
- *
  */
-
 @Path("")
 @DynamicPath
 public class LogsEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpointDefinition> {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(LogsEndpoint.class);
 
-    private MagnoliaConfigurationProperties _magnoliaProperties;
-
-    private String _baseLogFilePath = "";
+    private final String _baseLogFilePath;
 
     @Inject
-    protected LogsEndpoint(MonitoringEndpointDefinition endpointDefinition,
-            MagnoliaConfigurationProperties properties) {
+    protected LogsEndpoint(MonitoringEndpointDefinition endpointDefinition, MagnoliaConfigurationProperties properties) {
         super(endpointDefinition);
-        _magnoliaProperties = properties;
-
-        _baseLogFilePath = _magnoliaProperties.getProperty("magnolia.logs.dir");
-
+        _baseLogFilePath = properties.getProperty("magnolia.logs.dir");
     }
 
     @GET
     @Path("")
     @Produces(MediaType.APPLICATION_JSON)
     public Response availableLogs() {
-
         List<LogInfo> logFolderContents = new ArrayList<>();
 
-        // it should be "./monitoring/v1/logs/"
-        String pathBase;
+        // ignores other files that might be in the logs folder that don't have the extension ".log"
+        try (DirectoryStream<java.nio.file.Path> paths = Files.newDirectoryStream(Paths.get(_baseLogFilePath), "*.log")) {
+            String uriPath = MgnlContext.getWebContext().getRequest().getRequestURI();
 
-        try {
-            StringBuffer fullUrlPath = MgnlContext.getWebContext().getRequest().getRequestURL();
-
-            pathBase = fullUrlPath.substring(fullUrlPath.indexOf("."));
-
-            // ignores other files that might be in the logs folder that don't have the
-            // extension ".log"
-            Files.newDirectoryStream(Paths.get(_baseLogFilePath), "*.log").forEach(f -> {
-                logFolderContents.add(
-                        new LogInfo(f.getFileName().toString(), "/" + pathBase + "/" + f.getFileName().toString()));
-            });
-
+            paths.forEach(f -> logFolderContents.add(new LogInfo(f.getFileName().toString(), uriPath + "/" + f.getFileName())));
         } catch (IOException e) {
             LOGGER.error("An error occurred:", e);
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
@@ -112,8 +92,7 @@ public class LogsEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpointD
     @Path("/{logName}")
     @Produces(MediaType.TEXT_PLAIN)
     public Response logs(@PathParam("logName") String logName) {
-
-        String fullLogFilePath = "";
+        String fullLogFilePath;
 
         // preparing the strings
         String uniformLogName = logName.toLowerCase();
@@ -125,7 +104,7 @@ public class LogsEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpointD
         }
 
         StringBuilder contentBuilder = new StringBuilder();
-        try (Stream<String> stream = Files.lines(Paths.get(fullLogFilePath), StandardCharsets.UTF_8)) {
+        try (Stream<String> stream = Files.lines(Paths.get(fullLogFilePath), UTF_8)) {
             stream.forEach(s -> contentBuilder.append(s).append("\r\n"));
         } catch (IOException e) {
             LOGGER.error("An error occurred:", e);
