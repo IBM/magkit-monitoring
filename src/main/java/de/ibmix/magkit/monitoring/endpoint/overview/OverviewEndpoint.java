@@ -35,6 +35,7 @@ import de.ibmix.magkit.monitoring.endpoint.AbstractMonitoringEndpoint;
 import de.ibmix.magkit.monitoring.endpoint.ConfiguredMonitoringEndpointDefinition;
 import de.ibmix.magkit.monitoring.endpoint.MonitoringEndpointDefinition;
 
+import info.magnolia.context.MgnlContext;
 import info.magnolia.rest.registry.EndpointDefinitionRegistry;
 
 /**
@@ -62,8 +63,8 @@ public class OverviewEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpo
     @Path("")
     @Produces(MediaType.APPLICATION_JSON)
     public Response overview() {
-
         Overview endpointsOverview = new Overview();
+        String uriPath = MgnlContext.getWebContext().getRequest().getRequestURI();
 
         _registry.getAllProviders().forEach(p -> {
 
@@ -74,7 +75,7 @@ public class OverviewEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpo
             if (p.get() instanceof ConfiguredMonitoringEndpointDefinition) {
 
                 // "path"
-                String endpointPath = "/.rest/" + p.getMetadata().getReferenceId();
+                String endpointPath = uriPath.replace("monitoring", p.getMetadata().getReferenceId());
 
                 String[] refIdElements = p.getMetadata().getReferenceId().split("/");
 

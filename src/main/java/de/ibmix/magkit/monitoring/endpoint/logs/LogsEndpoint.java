@@ -89,15 +89,13 @@ public class LogsEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpointD
         String pathBase;
 
         try {
-            StringBuffer fullUrlPath = MgnlContext.getWebContext().getRequest().getRequestURL();
-
-            pathBase = fullUrlPath.substring(fullUrlPath.indexOf("."));
+            String uriPath = MgnlContext.getWebContext().getRequest().getRequestURI();
 
             // ignores other files that might be in the logs folder that don't have the
             // extension ".log"
             Files.newDirectoryStream(Paths.get(_baseLogFilePath), "*.log").forEach(f -> {
                 logFolderContents.add(
-                        new LogInfo(f.getFileName().toString(), "/" + pathBase + "/" + f.getFileName().toString()));
+                        new LogInfo(f.getFileName().toString(), uriPath + "/" + f.getFileName()));
             });
 
         } catch (IOException e) {
