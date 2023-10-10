@@ -59,6 +59,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 @Path("")
 @DynamicPath
 public class LogsEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpointDefinition> {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(LogsEndpoint.class);
 
     private final String _baseLogFilePath;
@@ -92,15 +93,12 @@ public class LogsEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpointD
     @Path("/{logName}")
     @Produces(MediaType.TEXT_PLAIN)
     public Response logs(@PathParam("logName") String logName) {
-        String fullLogFilePath;
-
         // preparing the strings
         String uniformLogName = logName.toLowerCase();
+        String fullLogFilePath = _baseLogFilePath + "/" + uniformLogName + ".log";
 
         if (uniformLogName.endsWith(".log")) {
             fullLogFilePath = _baseLogFilePath + "/" + uniformLogName;
-        } else {
-            fullLogFilePath = _baseLogFilePath + "/" + uniformLogName + ".log";
         }
 
         StringBuilder contentBuilder = new StringBuilder();
