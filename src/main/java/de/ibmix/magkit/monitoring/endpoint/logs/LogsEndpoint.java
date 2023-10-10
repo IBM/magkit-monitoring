@@ -37,17 +37,18 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 /**
- *
- * Logs Endpoint.
- *
+ * LogsEndpoint.
+ * <p>
  * This endpoint provides a JSON list of existing files in the log folder and
  * also provides the contents of the log file specified as a path parameter.
  *
@@ -74,14 +75,12 @@ public class LogsEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpointD
     @Produces(MediaType.APPLICATION_JSON)
     public Response availableLogs() {
         List<LogInfo> logFolderContents = new ArrayList<>();
-        try {
+
+        // ignores other files that might be in the logs folder that don't have the extension ".log"
+        try (DirectoryStream<java.nio.file.Path> paths = Files.newDirectoryStream(Paths.get(_baseLogFilePath), "*.log")) {
             String uriPath = MgnlContext.getWebContext().getRequest().getRequestURI();
 
-            // ignores other files that might be in the logs folder that don't have the
-            // extension ".log"
-            Files.newDirectoryStream(Paths.get(_baseLogFilePath), "*.log").forEach(f -> logFolderContents.add(
-                    new LogInfo(f.getFileName().toString(), uriPath + "/" + f.getFileName())));
-
+            paths.forEach(f -> logFolderContents.add(new LogInfo(f.getFileName().toString(), uriPath + "/" + f.getFileName())));
         } catch (IOException e) {
             LOGGER.error("An error occurred:", e);
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
@@ -103,7 +102,7 @@ public class LogsEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpointD
         }
 
         StringBuilder contentBuilder = new StringBuilder();
-        try (Stream<String> stream = Files.lines(Paths.get(fullLogFilePath), StandardCharsets.UTF_8)) {
+        try (Stream<String> stream = Files.lines(Paths.get(fullLogFilePath), UTF_8)) {
             stream.forEach(s -> contentBuilder.append(s).append("\r\n"));
         } catch (IOException e) {
             LOGGER.error("An error occurred:", e);
