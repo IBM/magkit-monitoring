@@ -50,7 +50,6 @@ public class OverviewEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpo
     @Inject
     protected OverviewEndpoint(MonitoringEndpointDefinition endpointDefinition, EndpointDefinitionRegistry registry) {
         super(endpointDefinition);
-
         _registry = registry;
     }
 
@@ -60,7 +59,6 @@ public class OverviewEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpo
     public Response overview() {
         Overview endpointsOverview = new Overview();
         String uriPath = MgnlContext.getWebContext().getRequest().getRequestURI();
-
         _registry.getAllProviders().forEach(p -> {
 
             // INFO: the types of system variables we are working with
@@ -68,20 +66,20 @@ public class OverviewEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpo
             // p.get() ------------------> EndpointDefinition endpointDefinition
 
             if (p.get() instanceof ConfiguredMonitoringEndpointDefinition) {
+
                 // "path"
                 String endpointPath = uriPath.replace("monitoring", p.getMetadata().getReferenceId());
+
                 String[] refIdElements = p.getMetadata().getReferenceId().split("/");
 
-                String version;
-                String name;
+                // the endpoint is NOT versioned: "monitoring" + moduleName
+                String version = "custom";
+                String name = refIdElements[1];
+
                 if (refIdElements.length == 3) {
                     // the endpoint is versioned: "monitoring" + version + moduleName
                     version = refIdElements[1];
                     name = refIdElements[2];
-                } else {
-                    // the endpoint is NOT versioned: "monitoring" + moduleName
-                    version = "custom";
-                    name = refIdElements[1];
                 }
 
                 // we don't want to list our own Overview endpoint among the found endpoints;
@@ -90,11 +88,13 @@ public class OverviewEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpo
                 boolean isThisOurOverviewEndpoint = (p.getMetadata().getModule().equals("magkit-monitoring")) && ("overview".equals(name));
 
                 if (!isThisOurOverviewEndpoint) {
+
                     EndpointInfo myEndpoint = new EndpointInfo(name, endpointPath);
                     if (endpointsOverview.getCategorizedEndpoints().containsKey(version)) {
                         endpointsOverview.getCategorizedEndpoints().get(version).add(myEndpoint);
                     } else {
-                        endpointsOverview.getCategorizedEndpoints().put(version, new ArrayList<>(List.of(myEndpoint)));
+                        endpointsOverview.getCategorizedEndpoints().put(version,
+                            new ArrayList<>(List.of(myEndpoint)));
                     }
                 }
             }

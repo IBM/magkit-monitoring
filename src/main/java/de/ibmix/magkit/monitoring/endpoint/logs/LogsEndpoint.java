@@ -37,18 +37,17 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.io.IOException;
-import java.nio.file.DirectoryStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
 /**
- * LogsEndpoint.
- * <p>
+ *
+ * Logs Endpoint.
+ *
  * This endpoint provides a JSON list of existing files in the log folder and
  * also provides the contents of the log file specified as a path parameter.
  *
@@ -59,6 +58,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 @Path("")
 @DynamicPath
 public class LogsEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpointDefinition> {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(LogsEndpoint.class);
 
     private final String _baseLogFilePath;
@@ -74,12 +74,14 @@ public class LogsEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpointD
     @Produces(MediaType.APPLICATION_JSON)
     public Response availableLogs() {
         List<LogInfo> logFolderContents = new ArrayList<>();
-
-        // ignores other files that might be in the logs folder that don't have the extension ".log"
-        try (DirectoryStream<java.nio.file.Path> paths = Files.newDirectoryStream(Paths.get(_baseLogFilePath), "*.log")) {
+        try {
             String uriPath = MgnlContext.getWebContext().getRequest().getRequestURI();
 
-            paths.forEach(f -> logFolderContents.add(new LogInfo(f.getFileName().toString(), uriPath + "/" + f.getFileName())));
+            // ignores other files that might be in the logs folder that don't have the
+            // extension ".log"
+            Files.newDirectoryStream(Paths.get(_baseLogFilePath), "*.log").forEach(f -> logFolderContents.add(
+                    new LogInfo(f.getFileName().toString(), uriPath + "/" + f.getFileName())));
+
         } catch (IOException e) {
             LOGGER.error("An error occurred:", e);
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
@@ -92,19 +94,16 @@ public class LogsEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpointD
     @Path("/{logName}")
     @Produces(MediaType.TEXT_PLAIN)
     public Response logs(@PathParam("logName") String logName) {
-        String fullLogFilePath;
-
         // preparing the strings
         String uniformLogName = logName.toLowerCase();
+        String fullLogFilePath = _baseLogFilePath + "/" + uniformLogName + ".log";
 
         if (uniformLogName.endsWith(".log")) {
             fullLogFilePath = _baseLogFilePath + "/" + uniformLogName;
-        } else {
-            fullLogFilePath = _baseLogFilePath + "/" + uniformLogName + ".log";
         }
 
         StringBuilder contentBuilder = new StringBuilder();
-        try (Stream<String> stream = Files.lines(Paths.get(fullLogFilePath), UTF_8)) {
+        try (Stream<String> stream = Files.lines(Paths.get(fullLogFilePath), StandardCharsets.UTF_8)) {
             stream.forEach(s -> contentBuilder.append(s).append("\r\n"));
         } catch (IOException e) {
             LOGGER.error("An error occurred:", e);
