@@ -7,7 +7,7 @@
     </parent>
 
     <artifactId>magkit-monitoring</artifactId>
-    <version>1.1.1-SNAPSHOT</version>
+    <version>1.1.1</version>
     <name>IBM iX Magnolia Monitoring</name>
 
     <properties>
@@ -46,7 +46,7 @@
         <url>https://github.com/IBM/magkit-monitoring.git</url>
         <connection>scm:git:https://github.com/IBM/magkit-monitoring.git</connection>
         <developerConnection>scm:git:https://github.com/IBM/magkit-monitoring.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>magkit-monitoring-1.1.1</tag>
     </scm>
 
     <repositories>
