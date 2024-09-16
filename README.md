@@ -1,25 +1,14 @@
-[![build-module](https://github.com/IBM/magkit-monitoring/actions/workflows/build.yaml/badge.svg)](https://github.com/IBM/magkit-monitoring/actions/workflows/build.yaml)
-
 # Magnolia Monitoring Module
+[![build-module](https://github.com/IBM/magkit-monitoring/actions/workflows/build.yaml/badge.svg)](https://github.com/IBM/magkit-monitoring/actions/workflows/build.yaml)
+[![Magnolia compatibility](https://img.shields.io/badge/magnolia-6.2-brightgreen.svg)](https://www.magnolia-cms.com)
 
 ## Scope
 
 The Magnolia Monitoring Module provides several REST endpoints for monitoring the Magnolia application.
 
 > **:warning: WARNING:** This module registers a filter in the Magnolia Filter Chain. \
-> When uninstalling this module make sure to remove the filter beforehand. Otherwise Magnolia might not be able to start up again.\
+> When uninstalling this module make sure to remove the filter beforehand. Otherwise, Magnolia might not be able to start up again.\
 > The filter is called **prometheus**
-
-## Usage
-
-This repository contains some example best practices for open source repositories:
-
-* [LICENSE](LICENSE)
-* [README.md](README.md)
-* [CONTRIBUTING.md](CONTRIBUTING.md)
-* [MAINTAINERS.md](MAINTAINERS.md)
-<!-- A Changelog allows you to track major changes and things that happen, https://github.com/github-changelog-generator/github-changelog-generator can help automate the process -->
-* [CHANGELOG.md](CHANGELOG.md)
 
 ### Issue tracking
 
@@ -49,7 +38,7 @@ Just add this dependency to your Magnolia installation
     <version>1.1.1</version>
 </dependency>
 ```
-If you need old version als 1.1.1 then use
+If you need an older version than 1.1.1 then use
 ```xml
 <dependency>
     <groupId>com.aperto.magkit</groupId>
@@ -60,38 +49,30 @@ If you need old version als 1.1.1 then use
 
 ## License
 
-All source files must include a Copyright and License header. The SPDX license header is
-preferred because it can be easily scanned.
-
 If you would like to see the detailed LICENSE click [here](LICENSE).
 
-```text
-#
-# Copyright 2020- IBM Inc. All rights reserved
-# SPDX-License-Identifier: Apache2.0
-#
-```
-
 ## Endpoints
-|ID|Endpoint|Description|
-|--|--|--|
-|`monitoring`|`/.rest/monitoring`|Overview of available endpoints|
-|`health`|`/.rest/monitoring/v1/health`|Provides application health information. E.g.: Status 200 if UP|
-|`env`|`/.rest/monitoring/v1/env`|Provides information about all JVM and environment properties|
-|`info`|`/.rest/monitoring/v1/info`|Provides general information about the Magnolia Application and environment|
-|`modules`|`/.rest/monitoring/v1/modules`|Provides a list of all installed Magnolia Modules and their respective version|
-|`metrics`|`/.rest/monitoring/v1/metrics`|Provides general information about the JVM runtime|
-|`threaddump`|`/.rest/monitoring/v1/thread`|Provides a thread dump|
-|`heapdump`|`/.rest/monitoring/v1/heap`|Provides a heap dump|
-|`logs`|`/.rest/monitoring/v1/logs/{logfile}`|Provides the contents of the specified log file|
-|`prometheus`|`/.rest/monitoring/v1/prometheus`|Provides information from the *Prometheus Exporter*. Use this endpoint to scrape time series data for Prometheus.
+
+| ID           | Endpoint                              | Description                                                                                                       |
+|--------------|---------------------------------------|-------------------------------------------------------------------------------------------------------------------|
+| `monitoring` | `/.rest/monitoring`                   | Overview of available endpoints                                                                                   |
+| `health`     | `/.rest/monitoring/v1/health`         | Provides application health information. E.g.: Status 200 if UP                                                   |
+| `env`        | `/.rest/monitoring/v1/env`            | Provides information about all JVM and environment properties                                                     |
+| `info`       | `/.rest/monitoring/v1/info`           | Provides general information about the Magnolia Application and environment                                       |
+| `modules`    | `/.rest/monitoring/v1/modules`        | Provides a list of all installed Magnolia Modules and their respective version                                    |
+| `metrics`    | `/.rest/monitoring/v1/metrics`        | Provides general information about the JVM runtime                                                                |
+| `threaddump` | `/.rest/monitoring/v1/thread`         | Provides a thread dump                                                                                            |
+| `heapdump`   | `/.rest/monitoring/v1/heap`           | Provides a heap dump                                                                                              |
+| `logs`       | `/.rest/monitoring/v1/logs/{logfile}` | Provides the contents of the specified log file                                                                   |
+| `prometheus` | `/.rest/monitoring/v1/prometheus`     | Provides information from the *Prometheus Exporter*. Use this endpoint to scrape time series data for Prometheus. |
 
 ## Authentication
 > **:warning: WARNING:** Access to the endpoints is controlled by the Magnolia Security App! \
 > Make sure that the user anonymous does not have access to paths starting with `/.rest/monitoring`
 
 To access the monitoring endpoints requests have to be authenticated.
-The authentication mechanism relies on Magnolias security configuration. Therefore use Basic Authentication with the following credentials
+The authentication mechanism relies on Magnolias security configuration. Therefore, use Basic Authentication with the following credentials
+
 | Username  | Password |
 | ------------- | ------------- |
 | monitoring  | jFWVuw2jrkznC7pu  |

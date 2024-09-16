@@ -2,14 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [1.1.1] - 2023-12-05
 
+### Changed
 - migrate the project to IBM open source GitHub
 
 ## [1.1.0] - 2023-01-11
 
 ### Changed
-- Migrate UI and app support to Magnolia 6.2 standard
+- Prometheus Micrometer implementation
 
-[unreleased]: https://github.com/IBM/magkit-monitoring/compare/magnolia-monitoring-1.6.0...HEAD
-[1.6.0]: https://github.com/IBM/magkit-monitoring/releases/tag/magnolia-monitoring-1.6.0
+[1.1.1]: https://github.com/IBM/magkit-monitoring/releases/tag/magkit-monitoring-1.1.1
+[1.1.0]: https://github.com/IBM/magkit-monitoring/releases/tag/magkit-monitoring-1.1.0
