@@ -36,22 +36,48 @@ import de.ibmix.magkit.monitoring.endpoint.MonitoringEndpointDefinition;
 import info.magnolia.rest.DynamicPath;
 
 /**
- *
- * Thread Dump Endpoint.
- *
+ * REST endpoint producing a textual JVM thread dump for diagnostic purposes.
+ * Delegates to {@link java.lang.management.ThreadMXBean} to collect active thread information.
+ * <p><strong>Purpose</strong></p>
+ * Offers a lightweight liveness and contention analysis aid by exposing thread states and stack traces.
+ * <p><strong>Main Functionality</strong></p>
+ * Captures all active threads via {@link ThreadMXBean#dumpAllThreads(boolean, boolean)} and concatenates their formatted
+ * {@link java.lang.management.ThreadInfo#toString()} representations into a single textual dump.
+ * <p><strong>Key Features</strong></p>
+ * <ul>
+ * <li>Generates full thread dump including stack traces.</li>
+ * <li>Plain text response for easy viewing.</li>
+ * </ul>
+ * <p><strong>Null and Error Handling</strong></p>
+ * Always returns a non-null string. No explicit exception handling; relies on JVM MXBean availability.
+ * <p><strong>Thread-Safety</strong></p>
+ * Stateless; safe for concurrent invocations. Under heavy load dumps may be expensive.
+ * <p><strong>Usage Example</strong></p>
+ * <pre>{@code
+ * String dump = threadDumpEndpoint.getThreadDump();
+ * }</pre>
+ * <p><strong>Important Details</strong></p>
+ * ThreadInfo formatting already includes stack trace; consumers should avoid additional parsing for performance reasons.
  * @author Sorina Radulescu
  * @since 2020-04-11
- *
  */
 @Path("")
 @DynamicPath
 public class ThreadDumpEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpointDefinition> {
 
+    /**
+     * Injection constructor wiring the monitoring endpoint definition.
+     * @param endpointDefinition endpoint definition metadata
+     */
     @Inject
     protected ThreadDumpEndpoint(MonitoringEndpointDefinition endpointDefinition) {
         super(endpointDefinition);
     }
 
+    /**
+     * Returns the current thread dump as plain text.
+     * @return textual thread dump containing threads and stack traces
+     */
     @GET
     @Path("")
     @Produces(MediaType.TEXT_PLAIN)

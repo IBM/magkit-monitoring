@@ -36,15 +36,34 @@ import org.slf4j.LoggerFactory;
 import info.magnolia.rest.DynamicPath;
 
 /**
- *
- * This endpoint provides information about the recurring jobs configured in
- * Magnolia.
- *
- * It is reachable under the following path: /.rest/monitoring/v1/scheduler
- *
+ * Scheduler monitoring REST endpoint exposing information about all enabled recurring Magnolia scheduler jobs.
+ * <p><strong>Purpose</strong></p>
+ * Provides operational visibility into configured recurring jobs including their next planned execution time.
+ * <p><strong>Main Functionality</strong></p>
+ * Delegates retrieval of enabled job definitions and cron evaluation to {@link SchedulerService}, returning results
+ * as JSON wrapped in an HTTP response object with appropriate status codes.
+ * <p><strong>Key Features</strong></p>
+ * <ul>
+ * <li>Lightweight, read-only job introspection.</li>
+ * <li>Computes next execution time on demand from Quartz cron expressions.</li>
+ * <li>Graceful error handling with HTTP 400 on failure.</li>
+ * </ul>
+ * <p><strong>Usage Preconditions</strong></p>
+ * The Magnolia scheduler module must be installed and jobs must be configured; DI must supply {@link SchedulerService}.
+ * <p><strong>Null and Error Handling</strong></p>
+ * Returns HTTP 400 (BAD_REQUEST) with an error message if job retrieval or cron evaluation fails.
+ * <p><strong>Thread-Safety</strong></p>
+ * Stateless aside from references to injected immutable endpoint definition and service; invocation is safe for concurrent requests.
+ * <p><strong>Usage Example</strong></p>
+ * <pre>{@code
+ * Response r = schedulerEndpoint.getScheduledJobs();
+ * }</pre>
+ * <p><strong>Side Effects</strong></p>
+ * None – only reads scheduler configuration and calculates next execution timestamps.
+ * <p><strong>Important Details</strong></p>
+ * Cron parsing relies on Quartz; invalid expressions throw exceptions which are converted to HTTP 400 responses.
  * @author MIHAELA PAPARETE (IBM)
  * @since 2020-04-23
- *
  */
 @Path("")
 @DynamicPath
@@ -52,15 +71,26 @@ public class SchedulerEndpoint extends AbstractMonitoringEndpoint<MonitoringEndp
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SchedulerEndpoint.class);
 
-    private SchedulerService _schedulerService;
+    private final SchedulerService _schedulerService;
 
+    /**
+     * <p>Creates a scheduler monitoring endpoint with its definition and backing service.</p>
+     *
+     * @param endpointDefinition endpoint configuration definition injected by Magnolia.
+     * @param service scheduler service providing enabled job data.
+     */
     @Inject
     protected SchedulerEndpoint(MonitoringEndpointDefinition endpointDefinition, SchedulerService service) {
         super(endpointDefinition);
-
         _schedulerService = service;
     }
 
+    /**
+     * <p>Returns all enabled scheduled jobs including their next planned execution time.</p>
+     * <p>On error a HTTP 400 response containing an explanatory message is returned.</p>
+     *
+     * @return HTTP response with status 200 and a JSON array of enabled jobs or status 400 on failure.
+     */
     @GET
     @Path("")
     @Produces(MediaType.APPLICATION_JSON)

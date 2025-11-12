@@ -33,22 +33,56 @@ import info.magnolia.module.scheduler.JobDefinition;
 import info.magnolia.module.scheduler.SchedulerModule;
 
 /**
- *
- * This is the service class for Scheduler endpoint.
+ * Service layer component providing enabled scheduled job metadata for the scheduler monitoring endpoint.
+ * <p><strong>Purpose</strong></p>
+ * Iterates Magnolia scheduler jobs, filters enabled ones, computes next valid execution time using Quartz cron semantics and maps them into {@link JobInfo} instances.
+ * <p><strong>Main Functionality</strong></p>
+ * For each enabled {@link info.magnolia.module.scheduler.JobDefinition} parses its cron, determines next execution time and assembles a {@link JobInfo} structure for transport.
+ * <p><strong>Key Features</strong></p>
+ * <ul>
+ * <li>Encapsulates cron evaluation.</li>
+ * <li>Produces stable ISO-like timestamp formatting.</li>
+ * <li>Isolates Magnolia scheduler dependency from REST layer.</li>
+ * </ul>
+ * <p><strong>Usage Preconditions</strong></p>
+ * Magnolia {@link info.magnolia.module.scheduler.SchedulerModule} must be active and injected.
+ * <p><strong>Null and Error Handling</strong></p>
+ * Throws an {@link Exception} when cron parsing fails; caller maps errors to HTTP responses.
+ * <p><strong>Thread-Safety</strong></p>
+ * Stateless aside from reference to injected module; safe for concurrent access.
+ * <p><strong>Side Effects</strong></p>
+ * None – only reads scheduler configuration and performs in-memory transformation.
+ * <p><strong>Usage Example</strong></p>
+ * <pre>{@code
+ * List<JobInfo> jobs = schedulerService.getEnabledJobs();
+ * }</pre>
+ * <p><strong>Important Details</strong></p>
+ * Cron expressions must conform to Quartz syntax; invalid patterns halt processing and surface as exceptions to callers.
  *
  * @author MIHAELA PAPARETE (IBM)
  * @since 2020-04-23
- *
  */
 public class SchedulerService {
 
-    private SchedulerModule _schedulerModule;
+    private final SchedulerModule _schedulerModule;
 
+    /**
+     * <p>Constructs the service with the Magnolia scheduler module dependency.</p>
+     *
+     * @param module injected Magnolia scheduler module used to access configured jobs.
+     */
     @Inject
     protected SchedulerService(SchedulerModule module) {
         _schedulerModule = module;
     }
 
+    /**
+     * <p>Returns metadata for all enabled scheduled jobs including computed next execution timestamp.</p>
+     * <p>Cron expressions are parsed using Quartz; invalid expressions result in an {@link Exception}.</p>
+     *
+     * @return list of enabled job info objects; empty list if no jobs are enabled.
+     * @throws Exception if a cron expression cannot be parsed or next execution time cannot be determined.
+     */
     public List<JobInfo> getEnabledJobs() throws Exception {
         List<JobInfo> scheduledJobs = new ArrayList<JobInfo>();
 
