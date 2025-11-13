@@ -82,6 +82,7 @@ public class ThreadDumpEndpoint extends AbstractMonitoringEndpoint<MonitoringEnd
     @Path("")
     @Produces(MediaType.TEXT_PLAIN)
     public String getThreadDump() {
+        // Excludes locked monitors and synchronizers for lightweight dump
         return threadDump(false, false);
     }
 
