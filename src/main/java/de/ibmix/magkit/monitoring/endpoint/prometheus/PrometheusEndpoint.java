@@ -30,15 +30,15 @@ import de.ibmix.magkit.monitoring.endpoint.AbstractMonitoringEndpoint;
 import de.ibmix.magkit.monitoring.endpoint.MonitoringEndpointDefinition;
 
 import info.magnolia.rest.DynamicPath;
-import io.micrometer.prometheus.PrometheusMeterRegistry;
+import io.micrometer.prometheusmetrics.PrometheusMeterRegistry;
 
 /**
  * REST endpoint exposing Prometheus formatted metrics scraped from the application's registry.
- * Delegates to Micrometer {@link io.micrometer.prometheus.PrometheusMeterRegistry} for text exposition format.
+ * Delegates to Micrometer {@link io.micrometer.prometheusmetrics.PrometheusMeterRegistry} for text exposition format.
  * <p><strong>Purpose</strong></p>
  * Serves as integration point for Prometheus server to collect application metrics.
  * <p><strong>Main Functionality</strong></p>
- * Invokes {@link io.micrometer.prometheus.PrometheusMeterRegistry#scrape()} to generate the current exposition text snapshot for all bound meters.
+ * Invokes {@link io.micrometer.prometheusmetrics.PrometheusMeterRegistry#scrape()} to generate the current exposition text snapshot for all bound meters.
  * <p><strong>Key Features</strong></p>
  * <ul>
  * <li>Plain text exposition format compliant with Prometheus.</li>

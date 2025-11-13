@@ -23,11 +23,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
 
+import io.micrometer.prometheusmetrics.PrometheusConfig;
+import io.micrometer.prometheusmetrics.PrometheusMeterRegistry;
 import org.junit.jupiter.api.Test;
 
 import de.ibmix.magkit.monitoring.endpoint.MonitoringEndpointDefinition;
-import io.micrometer.prometheus.PrometheusMeterRegistry;
-import io.micrometer.prometheus.PrometheusConfig;
+
 
 /**
  * Unit tests for {@link PrometheusEndpoint} ensuring delegation to registry scrape.
