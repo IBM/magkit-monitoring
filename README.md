@@ -30,12 +30,19 @@ The code is built by [GitHub actions](https://github.com/IBM/magkit-monitoring/a
 You can browse available artifacts through [Magnolia's Nexus](https://nexus.magnolia-cms.com/#nexus-search;quick~magnolia-monitoring)
 
 ### Maven dependency
+
+|       | Java | Magnolia | magkit-test | prometheus |
+|-------|-------------|----------|-------------|-------------|
+| 1.1.1 | 11          | 6.2.19   | 1.0.8       | 1.10.5    |
+| 1.1.2 | 11          | 6.2.45   | 1.0.10      | 1.10.5    |
+| 1.2.0 | 17          | 6.3.17   | 1.1.0       | 1.14.1    |
+
 Just add this dependency to your Magnolia installation
 ```xml
 <dependency>
     <groupId>de.ibmix.magkit</groupId>
     <artifactId>magkit-monitoring</artifactId>
-    <version>1.1.1</version>
+    <version>1.2.0</version>
 </dependency>
 ```
 If you need an older version than 1.1.1 then use
