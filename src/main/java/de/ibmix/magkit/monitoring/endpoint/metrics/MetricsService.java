@@ -24,6 +24,7 @@ import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.List;
 
 /**
  * Service component assembling JVM runtime performance metrics for monitoring exposure.
@@ -89,25 +90,29 @@ public class MetricsService {
 
         // the number of active threads for the current thread
         int activeThreads = Thread.activeCount();
-
         metricsInfo.setNbActiveThreads(activeThreads);
 
         long totalGarbageCollections = 0;
         long garbageCollectionTime = 0;
 
-        for (GarbageCollectorMXBean gc : ManagementFactory.getGarbageCollectorMXBeans()) {
+        for (GarbageCollectorMXBean gc : getGarbageCollectorMXBeans()) {
             GarbageCollectorInfo gcInfo = getGarbageCollectorInfo(gc);
-
             metricsInfo.getGcInfo().add(gcInfo);
-
             totalGarbageCollections += gcInfo.getCollectionCount() >= 0 ? gcInfo.getCollectionCount() : 0;
             garbageCollectionTime += gcInfo.getCollectionTime() >= 0 ? gcInfo.getCollectionTime() : 0;
         }
 
         metricsInfo.setTotalCollectionCount(totalGarbageCollections);
         metricsInfo.setTotalCollectionTime(garbageCollectionTime);
-
         return metricsInfo;
+    }
+
+    /**
+     * Template method returning the list of GC MXBeans. Extracted for testability so subclasses can supply custom beans.
+     * @return list of GC MXBeans
+     */
+    protected List<GarbageCollectorMXBean> getGarbageCollectorMXBeans() {
+        return ManagementFactory.getGarbageCollectorMXBeans();
     }
 
     /**
@@ -126,7 +131,6 @@ public class MetricsService {
         gcInfo.setCollectionCount(count);
         gcInfo.setCollectionTime(time);
         gcInfo.setMemoryPools(memoryPools);
-
         return gcInfo;
     }
 }

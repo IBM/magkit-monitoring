@@ -82,8 +82,7 @@ public class ThreadDumpEndpoint extends AbstractMonitoringEndpoint<MonitoringEnd
     @Path("")
     @Produces(MediaType.TEXT_PLAIN)
     public String getThreadDump() {
-        String threadDump = threadDump(false, false);
-        return threadDump;
+        return threadDump(false, false);
     }
 
     private static String threadDump(boolean lockedMonitors, boolean lockedSynchronizers) {

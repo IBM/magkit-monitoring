@@ -120,7 +120,7 @@ public class ModulesEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpoi
      * @author Dan Olaru (IBM)
      * @since 2020-04-09
      */
-    private static class ModuleResponsePojo {
+    static class ModuleResponsePojo {
 
         private final String _name;
         private final String _version;

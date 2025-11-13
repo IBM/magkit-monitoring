@@ -99,14 +99,6 @@ public class PrometheusMeterRegistryProvider implements Provider<PrometheusMeter
     }
 
     /**
-     * Returns monitoring module Prometheus configuration.
-     * @return config bean
-     */
-    protected de.ibmix.magkit.monitoring.config.prometheus.PrometheusConfig config() {
-        return _monitoringModule.getPrometheusConfig();
-    }
-
-    /**
      * Binds configured metric binders to the registry.
      * @param registry target registry
      */
