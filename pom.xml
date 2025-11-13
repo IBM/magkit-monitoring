@@ -12,9 +12,8 @@
 
     <properties>
         <!-- Magnolia module versions as used with Magnolia 6.3.17. -->
+        <version.magnolia>6.3.17</version.magnolia>
         <version.magnolia.license>2.0.2</version.magnolia.license>
-        <version.magnolia.about>6.3.1</version.magnolia.about>
-        <version.magnolia.rest>3.1.4</version.magnolia.rest>
         <!-- Test dependencies -->
         <version.junit.jupiter>5.14.0</version.junit.jupiter>
         <version.surefire>3.3.0</version.surefire>
@@ -44,7 +43,6 @@
         <dependency>
             <groupId>info.magnolia.about</groupId>
             <artifactId>magnolia-about-app</artifactId>
-            <version>${version.magnolia.about}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -56,7 +54,6 @@
         <dependency>
             <groupId>info.magnolia.rest</groupId>
             <artifactId>magnolia-rest-services</artifactId>
-            <version>${version.magnolia.rest}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
