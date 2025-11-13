@@ -79,7 +79,7 @@ public class MonitoringModuleVersionHandler extends DefaultModuleVersionHandler 
     }
 
     /**
-     * Adds extra install tasks (role amp; user bootstrap) to default tasks.
+     * Adds extra install tasks (role &amp; user bootstrap) to default tasks.
      * @param installContext Magnolia install context
      * @return list of install tasks including monitoring additions
      */
