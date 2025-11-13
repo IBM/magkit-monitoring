@@ -25,8 +25,8 @@ import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -66,12 +66,9 @@ public class InfoEndpointTest {
         Mockito.when(configurationProvider.getDatabaseDriver()).thenReturn("org.postgresql.Driver");
         Mockito.when(configurationProvider.getJcrName()).thenReturn("Jackrabbit");
         Mockito.when(configurationProvider.getJcrVersion()).thenReturn("2.20.0");
-        Calendar cal = Calendar.getInstance();
-        cal.set(2030, Calendar.JUNE, 15, 0, 0, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-        Date expirationDate = cal.getTime();
+        LocalDate expiration = LocalDate.parse("2030-06-15", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         Mockito.when(magnoliaLicense.getOwner()).thenReturn("Example Corp");
-        Mockito.when(magnoliaLicense.getExpirationDate()).thenReturn(expirationDate);
+        Mockito.when(magnoliaLicense.getValidityEndDate()).thenReturn(expiration);
         Mockito.when(licenseManager.getLicense(LicenseConsts.MODULE_ENTERPRISE)).thenReturn(magnoliaLicense);
         InfoEndpoint endpoint = new InfoEndpoint(endpointDefinition, configurationProvider, licenseManager);
         Info info = endpoint.info();
@@ -114,12 +111,9 @@ public class InfoEndpointTest {
         Mockito.when(configurationProvider.getDatabaseDriver()).thenReturn("org.h2.Driver");
         Mockito.when(configurationProvider.getJcrName()).thenReturn("Oak");
         Mockito.when(configurationProvider.getJcrVersion()).thenReturn("1.48.0");
-        Calendar cal = Calendar.getInstance();
-        cal.set(2028, Calendar.DECEMBER, 31, 0, 0, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-        Date expirationDate = cal.getTime();
+        LocalDate expiration = LocalDate.parse("2028-12-31", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         Mockito.when(magnoliaLicense.getOwner()).thenReturn("Public Owner");
-        Mockito.when(magnoliaLicense.getExpirationDate()).thenReturn(expirationDate);
+        Mockito.when(magnoliaLicense.getValidityEndDate()).thenReturn(expiration);
         Mockito.when(licenseManager.getLicense(LicenseConsts.MODULE_ENTERPRISE)).thenReturn(magnoliaLicense);
         InfoEndpoint endpoint = new InfoEndpoint(endpointDefinition, configurationProvider, licenseManager);
         Info info = endpoint.info();
@@ -154,12 +148,9 @@ public class InfoEndpointTest {
         Mockito.when(configurationProvider.getDatabaseDriver()).thenReturn("org.postgresql.Driver");
         Mockito.when(configurationProvider.getJcrName()).thenReturn("Jackrabbit");
         Mockito.when(configurationProvider.getJcrVersion()).thenReturn("2.20.0");
-        Calendar cal = Calendar.getInstance();
-        cal.set(2030, Calendar.JUNE, 15, 0, 0, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-        Date expirationDate = cal.getTime();
+        LocalDate expiration = LocalDate.parse("2030-06-15", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         Mockito.when(magnoliaLicense.getOwner()).thenReturn("Example Corp");
-        Mockito.when(magnoliaLicense.getExpirationDate()).thenReturn(expirationDate);
+        Mockito.when(magnoliaLicense.getValidityEndDate()).thenReturn(expiration);
         Mockito.when(licenseManager.getLicense(LicenseConsts.MODULE_ENTERPRISE)).thenReturn(magnoliaLicense);
         InfoEndpoint endpoint = new InfoEndpoint(endpointDefinition, configurationProvider, licenseManager);
         Info info1 = endpoint.info();
