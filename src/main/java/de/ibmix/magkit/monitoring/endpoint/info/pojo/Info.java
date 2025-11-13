@@ -21,30 +21,57 @@ package de.ibmix.magkit.monitoring.endpoint.info.pojo;
  */
 
 /**
- *
- * Info POJO.
- *
+ * Root container aggregating Magnolia and environment information objects for the info endpoint response.
+ * <p><strong>Key Features</strong></p>
+ * <ul>
+ * <li>Holds {@link Magnolia} metadata.</li>
+ * <li>Holds {@link Environment} metadata.</li>
+ * </ul>
+ * <p><strong>Null and Error Handling</strong></p>
+ * Fields may remain null until explicitly set; JSON serializers may omit or include nulls depending on configuration.
+ * <p><strong>Thread-Safety</strong></p>
+ * Not thread-safe; build per request.
+ * <p><strong>Usage Example</strong></p>
+ * <pre>{@code
+ * Info info = new Info();
+ * info.setMagnolia(new Magnolia());
+ * }</pre>
  * @author CLAUDIU GONCIULEA (IBM iX)
  * @since 2020-04-09
- *
  */
 public class Info {
 
     private Magnolia _magnolia;
     private Environment _environment;
 
+    /**
+     * Returns Magnolia metadata.
+     * @return magnolia descriptor; may be null
+     */
     public Magnolia getMagnolia() {
         return _magnolia;
     }
 
+    /**
+     * Sets Magnolia metadata.
+     * @param magnolia magnolia descriptor; may be null
+     */
     public void setMagnolia(Magnolia magnolia) {
         _magnolia = magnolia;
     }
 
+    /**
+     * Returns environment descriptor.
+     * @return environment descriptor; may be null
+     */
     public Environment getEnvironment() {
         return _environment;
     }
 
+    /**
+     * Sets environment descriptor.
+     * @param environment environment descriptor; may be null
+     */
     public void setEnvironment(Environment environment) {
         _environment = environment;
     }

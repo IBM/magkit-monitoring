@@ -43,12 +43,35 @@ import info.magnolia.license.LicenseManager;
 import info.magnolia.rest.DynamicPath;
 
 /**
- *
- * Info Endpoint.
- *
+ * Provides aggregated runtime and license information about the running Magnolia instance.
+ * Combines environment details (OS, JVM, application server, DB, repository), Magnolia version/edition and license
+ * metadata into a single JSON structure for operational insight and inventory auditing.
+ * <p><strong>Purpose</strong></p>
+ * Supplies a consolidated view of system profile and licensing enabling monitoring tools to assess deployment state.
+ * <p><strong>Main Functionality</strong></p>
+ * Gathers edition/version/instance via {@link info.magnolia.about.app.InstanceConfigurationProvider}, retrieves enterprise license owner and expiration via {@link info.magnolia.license.LicenseManager}, assembles environment details from system properties and provider methods into nested POJOs.
+ * <p><strong>Key Features</strong></p>
+ * <ul>
+ * <li>Reads instance configuration via {@link info.magnolia.about.app.InstanceConfigurationProvider}.</li>
+ * <li>Extracts enterprise license owner and expiration via {@link info.magnolia.license.LicenseManager}.</li>
+ * <li>Builds nested POJOs ({@link de.ibmix.magkit.monitoring.endpoint.info.pojo.Magnolia}, {@link de.ibmix.magkit.monitoring.endpoint.info.pojo.License}, {@link de.ibmix.magkit.monitoring.endpoint.info.pojo.Environment}).</li>
+ * </ul>
+ * <p><strong>Usage Preconditions</strong></p>
+ * Magnolia dependency injection must provide required services.
+ * <p><strong>Side Effects</strong></p>
+ * Performs license manager lookups and system property reads; no persistent state changes.
+ * <p><strong>Null and Error Handling</strong></p>
+ * May throw {@link java.io.IOException} originating from underlying configuration access. Returns fully populated, non-null {@link de.ibmix.magkit.monitoring.endpoint.info.pojo.Info} on success.
+ * <p><strong>Thread-Safety</strong></p>
+ * Stateless after construction; safe for concurrent GET requests.
+ * <p><strong>Usage Example</strong></p>
+ * <pre>{@code
+ * Info info = infoEndpoint.info();
+ * }</pre>
+ * <p><strong>Important Details</strong></p>
+ * License expiration date is formatted yyyy-MM-dd; consumers should parse accordingly and consider timezone neutrality.
  * @author CLAUDIU GONCIULEA (IBM iX)
  * @since 2020-04-09
- *
  */
 @Path("")
 @DynamicPath
@@ -57,28 +80,34 @@ public class InfoEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpointD
     private static final String AUTHOR = "author";
     private static final String PUBLIC = "public";
 
-    private InstanceConfigurationProvider _configurationProvider;
-    private LicenseManager _licenseManager;
+    private final InstanceConfigurationProvider _configurationProvider;
+    private final LicenseManager _licenseManager;
 
+    /**
+     * Injection constructor wiring required Magnolia services.
+     * @param endpointDefinition monitoring endpoint definition metadata
+     * @param configurationProvider instance configuration provider supplying edition, version and environment settings
+     * @param licenseManager Magnolia license manager for enterprise module license lookup
+     */
     @Inject
     protected InfoEndpoint(MonitoringEndpointDefinition endpointDefinition,
             InstanceConfigurationProvider configurationProvider, LicenseManager licenseManager) {
-
         super(endpointDefinition);
-
         _configurationProvider = configurationProvider;
         _licenseManager = licenseManager;
     }
 
+    /**
+     * Builds and returns aggregated instance information including Magnolia and environment data plus license details.
+     * @return populated info descriptor; never null on success
+     * @throws IOException if configuration access encounters an I/O problem
+     */
     @GET
     @Path("")
     @Produces(MediaType.APPLICATION_JSON)
     public Info info() throws IOException {
-
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-
         Info info = new Info();
-
         Magnolia magnolia = new Magnolia();
         License license = new License();
         Environment environment = new Environment();
@@ -88,10 +117,8 @@ public class InfoEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpointD
         magnolia.setInstance(_configurationProvider.isAdmin() ? AUTHOR : PUBLIC);
 
         info.magnolia.license.License magnoliaLicense = _licenseManager.getLicense(LicenseConsts.MODULE_ENTERPRISE);
-
         license.setOwner(magnoliaLicense.getOwner());
         license.setExpirationDate(formatter.format(magnoliaLicense.getExpirationDate()));
-
         magnolia.setLicense(license);
 
         environment.setOperatingSystem(System.getProperty("os.name"));
@@ -103,7 +130,6 @@ public class InfoEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpointD
 
         info.setMagnolia(magnolia);
         info.setEnvironment(environment);
-
         return info;
     }
 }

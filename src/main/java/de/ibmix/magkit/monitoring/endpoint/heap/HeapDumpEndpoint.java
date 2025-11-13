@@ -42,12 +42,32 @@ import com.sun.management.HotSpotDiagnosticMXBean;
 import info.magnolia.rest.DynamicPath;
 
 /**
- *
- * Heap Dump Endpoint.
- *
+ * REST endpoint producing a JVM heap dump file for offline memory analysis.
+ * Uses HotSpot diagnostic MBean to create an HPROF heap dump served as a downloadable binary.
+ * <p><strong>Purpose</strong></p>
+ * Enables on-demand capture of heap state for troubleshooting memory leaks and object retention.
+ * <p><strong>Main Functionality</strong></p>
+ * Creates a timestamped file in a configurable directory, invokes {@link com.sun.management.HotSpotDiagnosticMXBean#dumpHeap(String, boolean)} and streams the resulting file with appropriate Content-Disposition headers.
+ * <p><strong>Key Features</strong></p>
+ * <ul>
+ * <li>Generates HPROF file named with timestamp.</li>
+ * <li>Dumps only live objects by default.</li>
+ * <li>Streams result as octet-stream with Content-Disposition header.</li>
+ * </ul>
+ * <p><strong>Usage Preconditions</strong></p>
+ * Requires HotSpot JVM and sufficient file system permissions to create dump directory and file.
+ * <p><strong>Null and Error Handling</strong></p>
+ * On I/O errors logs exception and still attempts to respond; resulting file may be null causing runtime issues downstream.
+ * <p><strong>Thread-Safety</strong></p>
+ * Stateless; concurrent dumps may consume disk and memory resources. Consider rate limiting.
+ * <p><strong>Usage Example</strong></p>
+ * <pre>{@code
+ * Response r = heapDumpEndpoint.getHeapDump();
+ * }</pre>
+ * <p><strong>Important Details</strong></p>
+ * Heap dumps are potentially large; consumers should implement retention and cleanup to avoid disk exhaustion.
  * @author Sorina Radulescu
  * @since 2020-04-11
- *
  */
 @Path("")
 @DynamicPath
@@ -66,6 +86,10 @@ public class HeapDumpEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpo
         super(endpointDefinition);
     }
 
+    /**
+     * Generates a heap dump file and returns it as downloadable response.
+     * @return response containing heap dump file as attachment
+     */
     @GET
     @Path("")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
@@ -89,6 +113,12 @@ public class HeapDumpEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpo
                 .header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"").build();
     }
 
+    /**
+     * Invokes HotSpot MXBean to write a heap dump to the given file path.
+     * @param filePath absolute or relative file path target
+     * @param live if true dump only live objects
+     * @throws IOException if dump cannot be written
+     */
     public static void dumpHeap(String filePath, boolean live) throws IOException {
         MBeanServer server = ManagementFactory.getPlatformMBeanServer();
         HotSpotDiagnosticMXBean mxBean = ManagementFactory.newPlatformMXBeanProxy(server,

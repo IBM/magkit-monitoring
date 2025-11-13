@@ -33,11 +33,30 @@ import info.magnolia.rest.DynamicPath;
 import io.micrometer.prometheus.PrometheusMeterRegistry;
 
 /**
- * Prometheus endpoint class.
- *
+ * REST endpoint exposing Prometheus formatted metrics scraped from the application's registry.
+ * Delegates to Micrometer {@link io.micrometer.prometheus.PrometheusMeterRegistry} for text exposition format.
+ * <p><strong>Purpose</strong></p>
+ * Serves as integration point for Prometheus server to collect application metrics.
+ * <p><strong>Main Functionality</strong></p>
+ * Invokes {@link io.micrometer.prometheus.PrometheusMeterRegistry#scrape()} to generate the current exposition text snapshot for all bound meters.
+ * <p><strong>Key Features</strong></p>
+ * <ul>
+ * <li>Plain text exposition format compliant with Prometheus.</li>
+ * <li>Direct scrape of live registry metrics.</li>
+ * </ul>
+ * <p><strong>Null and Error Handling</strong></p>
+ * Always returns non-null text; underlying registry must be initialized or may yield empty output.
+ * <p><strong>Thread-Safety</strong></p>
+ * Stateless aside from injected registry; scraping is thread-safe per Micrometer design.
+ * <p><strong>Usage Example</strong></p>
+ * <pre>{@code
+ * String metrics = prometheusEndpoint.prometheus();
+ * }</pre>
+ * <p><strong>Important Details</strong></p>
+ * Scrape output may include high-cardinality labels if misconfigured; ensure URI whitelist and other filters minimize cardinality.
  * @author VladNacu
  * @author Sönke Schmidt - IBM iX
- *
+ * @since 2023-09-13
  */
 @Path("")
 @DynamicPath
@@ -45,6 +64,11 @@ public class PrometheusEndpoint extends AbstractMonitoringEndpoint<MonitoringEnd
 
     private final PrometheusMeterRegistry _registry;
 
+    /**
+     * Constructs the prometheus endpoint with its definition and registry.
+     * @param endpointDefinition monitoring endpoint definition metadata
+     * @param registry prometheus meter registry providing metrics
+     */
     @Inject
     protected PrometheusEndpoint(MonitoringEndpointDefinition endpointDefinition, PrometheusMeterRegistry registry) {
         super(endpointDefinition);
@@ -52,6 +76,10 @@ public class PrometheusEndpoint extends AbstractMonitoringEndpoint<MonitoringEnd
 
     }
 
+    /**
+     * Scrapes and returns the current Prometheus exposition text.
+     * @return metrics in Prometheus text format
+     */
     @GET
     @Path("")
     @Produces(MediaType.TEXT_PLAIN)

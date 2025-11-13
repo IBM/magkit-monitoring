@@ -32,22 +32,49 @@ import de.ibmix.magkit.monitoring.endpoint.MonitoringEndpointDefinition;
 import info.magnolia.rest.DynamicPath;
 
 /**
- *
- * Health Endpoint.
- *
+ * REST endpoint exposing a simple application health indicator for monitoring systems.
+ * Currently returns a static {@link Health} instance with default status; intended as extension point for future health checks.
+ * <p><strong>Purpose</strong></p>
+ * Provides a lightweight liveness signal for orchestrators and dashboards.
+ * <p><strong>Main Functionality</strong></p>
+ * Instantiates a new {@link Health} DTO per request, currently with default status value, allowing future enhancement to incorporate dynamic checks.
+ * <p><strong>Key Features</strong></p>
+ * <ul>
+ * <li>Stateless GET returning JSON payload.</li>
+ * <li>Extensible by adapting {@link Health} population logic.</li>
+ * </ul>
+ * <p><strong>Usage Preconditions</strong></p>
+ * Requires proper wiring of the monitoring endpoint definition by Magnolia's dependency injection.
+ * <p><strong>Null and Error Handling</strong></p>
+ * Always returns a non-null {@link Health} object; no exceptions thrown in current implementation.
+ * <p><strong>Thread-Safety</strong></p>
+ * Stateless; safe for concurrent invocation.
+ * <p><strong>Usage Example</strong></p>
+ * <pre>{@code
+ * Health h = healthEndpoint.health();
+ * }</pre>
+ * <p><strong>Important Details</strong></p>
+ * Future health enrichment (database, repository, cache checks) should preserve backward compatibility of existing status field.
  * @author Soenke Schmidt (IBM iX)
  * @since 2020-03-29
- *
  */
 @Path("")
 @DynamicPath
 public class HealthEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpointDefinition> {
 
+    /**
+     * Constructs the health endpoint with its monitoring definition.
+     * @param endpointDefinition monitoring endpoint meta definition
+     */
     @Inject
     protected HealthEndpoint(MonitoringEndpointDefinition endpointDefinition) {
         super(endpointDefinition);
     }
 
+    /**
+     * Returns a simple health descriptor with default status value.
+     * @return health descriptor; never null
+     */
     @GET
     @Path("")
     @Produces(MediaType.APPLICATION_JSON)

@@ -42,20 +42,34 @@ import info.magnolia.module.model.reader.LightModuleDefinitionReader;
 import info.magnolia.rest.DynamicPath;
 
 /**
- *
- * Modules endpoint.
- *
+ * REST endpoint exposing a list of all Magnolia modules (light and registered) with their resolved versions.
+ * Merges definitions from {@link info.magnolia.module.model.reader.LightModuleDefinitionReader} and {@link info.magnolia.module.ModuleRegistry}.
+ * <p><strong>Purpose</strong></p>
+ * Provides inventory visibility for operational diagnostics and compatibility checks.
+ * <p><strong>Key Features</strong></p>
+ * <ul>
+ * <li>Merges light and traditional module definitions.</li>
+ * <li>Sorts output alphabetically.</li>
+ * <li>Returns compact POJOs with name and version only.</li>
+ * </ul>
+ * <p><strong>Null and Error Handling</strong></p>
+ * Throws {@link info.magnolia.module.ModuleManagementException} if reading fails. Returns empty list if no modules resolved.
+ * <p><strong>Thread-Safety</strong></p>
+ * Stateless aside from injected readers; safe for concurrent invocation.
+ * <p><strong>Usage Example</strong></p>
+ * <pre>{@code
+ * List<?> modules = modulesEndpoint.modules();
+ * }</pre>
  * @author Dan Olaru (IBM)
  * @since 2020-04-09
- *
  */
 
 @Path("")
 @DynamicPath
 public class ModulesEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpointDefinition> {
 
-    private ModuleRegistry _moduleRegistry;
-    private LightModuleDefinitionReader _lightModuleDefinitionReader;
+    private final ModuleRegistry _moduleRegistry;
+    private final LightModuleDefinitionReader _lightModuleDefinitionReader;
 
     @Inject
     protected ModulesEndpoint(MonitoringEndpointDefinition endpointDefinition, ModuleRegistry moduleRegistry, LightModuleDefinitionReader lightModuleDefinitionReader) {
@@ -64,6 +78,11 @@ public class ModulesEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpoi
         _lightModuleDefinitionReader = lightModuleDefinitionReader;
     }
 
+    /**
+     * Returns merged list of module name/version pairs from light and registered modules.
+     * @return sorted list of module response POJOs
+     * @throws ModuleManagementException if reading module definitions fails
+     */
     @GET
     @Path("")
     @Produces(MediaType.APPLICATION_JSON)
@@ -81,20 +100,53 @@ public class ModulesEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpoi
             .collect(Collectors.toList());
     }
 
-    private static class ModuleResponsePojo {
+    /**
+     * Simple immutable value object representing a module with name and version.
+     * <p><strong>Purpose</strong></p>
+     * Provides a compact representation of a Magnolia module suitable for JSON serialization in the modules endpoint response.
+     * <p><strong>Key Features</strong></p>
+     * <ul>
+     * <li>Immutable fields set via constructor.</li>
+     * <li>Exposes only essential metadata (name, version).</li>
+     * </ul>
+     * <p><strong>Null and Error Handling</strong></p>
+     * Constructor parameters should be non-null; no validation performed internally. Getters may return null if constructed with null values.
+     * <p><strong>Thread-Safety</strong></p>
+     * Immutable after construction; safe for concurrent read access.
+     * <p><strong>Usage Example</strong></p>
+     * <pre>{@code
+     * ModuleResponsePojo pojo = new ModuleResponsePojo("magkit-monitoring", "1.1.2-SNAPSHOT");
+     * }</pre>
+     * @author Dan Olaru (IBM)
+     * @since 2020-04-09
+     */
+    static class ModuleResponsePojo {
 
         private final String _name;
         private final String _version;
 
+        /**
+         * Creates module response.
+         * @param name module name
+         * @param version module version string
+         */
         ModuleResponsePojo(String name, String version) {
             _name = name;
             _version = version;
         }
 
+        /**
+         * Returns module name.
+         * @return module name
+         */
         public String getName() {
             return _name;
         }
 
+        /**
+         * Returns module version.
+         * @return version string
+         */
         public String getVersion() {
             return _version;
         }

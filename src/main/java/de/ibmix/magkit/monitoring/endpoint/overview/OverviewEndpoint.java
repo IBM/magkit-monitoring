@@ -37,8 +37,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Overview Endpoint.
- *
+ * REST endpoint aggregating and listing all registered monitoring endpoints grouped by version.
+ * It inspects Magnolia's {@link info.magnolia.rest.registry.EndpointDefinitionRegistry} to build a categorized map
+ * excluding itself.
+ * <p><strong>Purpose</strong></p>
+ * Provides a discovery mechanism for clients to enumerate available monitoring endpoints and their paths.
+ * <p><strong>Main Functionality</strong></p>
+ * Iterates over all endpoint definition providers, filters monitoring definitions, derives version/name segments from their reference id and assembles a version-keyed map excluding the overview endpoint itself.
+ * <p><strong>Key Features</strong></p>
+ * <ul>
+ * <li>Groups endpoints by version (custom or semantic version folder).</li>
+ * <li>Excludes the overview endpoint from the list.</li>
+ * <li>Builds stable path references for each endpoint.</li>
+ * </ul>
+ * <p><strong>Usage Preconditions</strong></p>
+ * Requires a functional Magnolia context and an initialized endpoint registry. Invocation outside a web request will fail due to path resolution logic.
+ * <p><strong>Null and Error Handling</strong></p>
+ * Returns 200 with possibly empty map if no endpoints are present. No explicit error handling inside iteration; relies on registry stability.
+ * <p><strong>Thread-Safety</strong></p>
+ * Stateless aside from injected registry reference; safe for concurrent GET operations.
+ * <p><strong>Usage Example</strong></p>
+ * <pre>{@code
+ * Response r = overviewEndpoint.overview();
+ * }</pre>
+ * <p><strong>Important Details</strong></p>
+ * Reference id parsing assumes structure monitoring[/version]/name; deviations from this pattern may categorize incorrectly.
  * @author Dan Olaru (IBM)
  * @since 2020-04-24
  */
@@ -47,12 +70,21 @@ public class OverviewEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpo
 
     private final EndpointDefinitionRegistry _registry;
 
+    /**
+     * Constructs the overview endpoint with its definition and registry reference.
+     * @param endpointDefinition monitoring endpoint definition metadata
+     * @param registry Magnolia endpoint definition registry
+     */
     @Inject
     protected OverviewEndpoint(MonitoringEndpointDefinition endpointDefinition, EndpointDefinitionRegistry registry) {
         super(endpointDefinition);
         _registry = registry;
     }
 
+    /**
+     * Builds a categorized overview of monitoring endpoints grouped by version.
+     * @return HTTP response containing map of version to list of endpoint info
+     */
     @GET
     @Path("")
     @Produces(MediaType.APPLICATION_JSON)

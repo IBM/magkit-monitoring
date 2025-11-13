@@ -32,39 +32,68 @@ import de.ibmix.magkit.monitoring.endpoint.MonitoringEndpointDefinition;
 import info.magnolia.rest.DynamicPath;
 
 /**
- *
- * <pre>
- * This endpoint provides general information about the JVM runtime.
- * - used / available memory
- * - Garbage Collector information
- *  a) Garbage Collectors Name
- *  b) Garbage Collectors Memory Pools
- *  c) Collection Count for each Garbage Collector
- *  d) Collection Time for each Garbage Collector
- *  e) Total Collection Count
- *  f) Total Collection Time
- * - No. of active threads
- *
- * Example for endpoint call:
- *      http://localhost:8001/author/.rest/monitoring/v1/metrics
- * </pre>
+ * REST endpoint exposing a concise snapshot of JVM runtime and garbage collection metrics.
+ * <p><strong>Purpose</strong></p>
+ * Provides a JSON representation of current memory usage (used, available, total in MB), active thread count and per-garbage-collector statistics (name, associated memory pools, collection counts and times) together with aggregated totals.
+ * <p><strong>Main Functionality</strong></p>
+ * Delegates data assembly to {@link MetricsService} and serializes the resulting {@link MetricsInfo} DTO for monitoring consumers.
+ * <p><strong>Key Features</strong></p>
+ * <ul>
+ * <li>JAX-RS endpoint (HTTP GET) producing application/json.</li>
+ * <li>Aggregates low-level JVM MXBean data into a stable schema.</li>
+ * <li>Separates transport concerns (endpoint) from collection logic (service).</li>
+ * </ul>
+ * <p><strong>Usage Preconditions</strong></p>
+ * Magnolia REST module must route requests to the configured monitoring endpoint path; {@link MetricsService} must be injectable.
+ * <p><strong>Side Effects</strong></p>
+ * None; invocation only reads JVM management interfaces.
+ * <p><strong>Null and Error Handling</strong></p>
+ * Service level may provide zero / negative sentinel values for unsupported counters; endpoint itself does not throw checked exceptions.
+ * <p><strong>Thread-Safety</strong></p>
+ * Stateless; safe for concurrent HTTP requests. Underlying service is stateless as well.
+ * <p><strong>Usage Example</strong></p>
+ * <pre>{@code
+ * GET http://localhost:8080/author/.rest/monitoring/v1/metrics
+ * -> 200 OK
+ * {
+ *   "usedMemoryMb": 123.4567,
+ *   "availableMemoryMb": 512.0000,
+ *   "totalMemoryMb": 635.4567,
+ *   "nbActiveThreads": 42,
+ *   "gcInfo": [ ... ],
+ *   "totalCollectionCount": 1000,
+ *   "totalCollectionTime": 2500
+ * }
+ * }</pre>
+ * <p><strong>Important Details</strong></p>
+ * Values are point-in-time snapshots; repeat calls reflect current JVM state and can be used for simple polling.
+ * <p><strong>Extensibility</strong></p>
+ * Additional metrics can be added by extending {@link MetricsInfo} and enriching {@link MetricsService} without changing the endpoint signature.
  *
  * @author MIHAELA PAPARETE (IBM)
  * @since 2020-04-08
- *
  */
 @Path("")
 @DynamicPath
 public class MetricsEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpointDefinition> {
 
-    private MetricsService _metricsService;
+    private final MetricsService _metricsService;
 
+    /**
+     * Constructs the metrics endpoint with its definition and backing service.
+     * @param endpointDefinition endpoint metadata definition
+     * @param service metrics collection service dependency
+     */
     @Inject
     protected MetricsEndpoint(MonitoringEndpointDefinition endpointDefinition, MetricsService service) {
         super(endpointDefinition);
         _metricsService = service;
     }
 
+    /**
+     * Returns a snapshot of current JVM metrics (memory, threads, GC stats).
+     * @return metrics information DTO
+     */
     @GET
     @Path("")
     @Produces(MediaType.APPLICATION_JSON)

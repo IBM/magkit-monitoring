@@ -47,11 +47,30 @@ import java.util.stream.Stream;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
- * LogsEndpoint.
- * <p>
- * This endpoint provides a JSON list of existing files in the log folder and
- * also provides the contents of the log file specified as a path parameter.
- *
+ * REST endpoint providing access to available log files and their contents.
+ * Lists all .log files in the configured Magnolia log directory and allows retrieval of an individual file's content.
+ * <p><strong>Purpose</strong></p>
+ * Facilitates lightweight log inspection without direct filesystem access for operational troubleshooting.
+ * <p><strong>Main Functionality</strong></p>
+ * Enumerates *.log files in configured directory, constructs access URIs, and streams selected file content with CRLF line endings to aid cross-platform viewing.
+ * <p><strong>Key Features</strong></p>
+ * <ul>
+ * <li>Enumerates log files with dynamic path hints.</li>
+ * <li>Returns file contents in plain text with CRLF line endings.</li>
+ * <li>Graceful error handling for missing or unreadable files.</li>
+ * </ul>
+ * <p><strong>Usage Preconditions</strong></p>
+ * Magnolia configuration property <code>magnolia.logs.dir</code> must be set. File system permissions must allow read access.
+ * <p><strong>Null and Error Handling</strong></p>
+ * Returns 500 on directory access issues, 400 if requested file not found. Successful responses always non-null.
+ * <p><strong>Thread-Safety</strong></p>
+ * Stateless aside from immutable base path; concurrent reads safe. Large files may impact performance under load.
+ * <p><strong>Usage Example</strong></p>
+ * <pre>{@code
+ * Response list = logsEndpoint.availableLogs();
+ * }</pre>
+ * <p><strong>Important Details</strong></p>
+ * Large log files are streamed fully into memory (StringBuilder); consider pagination or tailing for very large files.
  * @author Dan Olaru (IBM)
  * @author MIHAELA PAPARETE (IBM)
  * @since 2020-04-09
@@ -70,6 +89,10 @@ public class LogsEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpointD
         _baseLogFilePath = properties.getProperty("magnolia.logs.dir");
     }
 
+    /**
+     * Returns a JSON list of available .log files with their access URIs.
+     * @return HTTP response containing list of {@link LogInfo}
+     */
     @GET
     @Path("")
     @Produces(MediaType.APPLICATION_JSON)
@@ -89,6 +112,11 @@ public class LogsEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpointD
         return Response.status(Status.OK).entity(logFolderContents).build();
     }
 
+    /**
+     * Returns the content of the specified log file.
+     * @param logName base name or full filename of the log (with or without .log extension)
+     * @return HTTP response containing file content or error status
+     */
     @GET
     @Path("/{logName}")
     @Produces(MediaType.TEXT_PLAIN)

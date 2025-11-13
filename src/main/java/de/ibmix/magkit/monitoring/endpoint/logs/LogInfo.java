@@ -21,12 +21,28 @@ package de.ibmix.magkit.monitoring.endpoint.logs;
  */
 
 /**
- *
- * LogInfo POJO.
- *
+ * Value object describing a log file by name and path reference used by the logs endpoint.
+ * <p><strong>Purpose</strong></p>
+ * Provides minimal metadata for listing and linking log resources.
+ * <p><strong>Main Functionality</strong></p>
+ * Holds two mutable string properties (name, path) for JSON serialization; constructed with both values and exposes standard getters/setters.
+ * <p><strong>Key Features</strong></p>
+ * <ul>
+ * <li>Mutable name and path.</li>
+ * <li>Empty string defaults.</li>
+ * </ul>
+ * <p><strong>Null and Error Handling</strong></p>
+ * Setters allow null; avoid setting null to maintain consistent JSON output.
+ * <p><strong>Thread-Safety</strong></p>
+ * Not thread-safe; designed for per-request instantiation.
+ * <p><strong>Usage Example</strong></p>
+ * <pre>{@code
+ * LogInfo info = new LogInfo("system", "/monitoring/logs/system");
+ * }</pre>
+ * <p><strong>Important Details</strong></p>
+ * Path should reflect a REST-accessible resource, not a filesystem location, ensuring clients do not infer direct file system access.
  * @author Dan Olaru (IBM)
  * @since 2020-04-09
- *
  */
 
 public class LogInfo {
@@ -35,24 +51,45 @@ public class LogInfo {
 
     private String _path = "";
 
+    /**
+     * Constructs log file descriptor.
+     * @param logName file name
+     * @param logPath access path
+     */
     public LogInfo(String logName, String logPath) {
         super();
         _name = logName;
         _path = logPath;
     }
 
+    /**
+     * Returns log file name.
+     * @return name string
+     */
     public String getName() {
         return _name;
     }
 
+    /**
+     * Sets log file name.
+     * @param logName new name
+     */
     public void setName(String logName) {
         _name = logName;
     }
 
+    /**
+     * Returns log file path.
+     * @return path string
+     */
     public String getPath() {
         return _path;
     }
 
+    /**
+     * Sets log file path.
+     * @param logPath new path
+     */
     public void setPath(String logPath) {
         _path = logPath;
     }

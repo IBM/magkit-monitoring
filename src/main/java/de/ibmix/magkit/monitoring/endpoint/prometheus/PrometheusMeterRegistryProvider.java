@@ -42,11 +42,31 @@ import io.micrometer.prometheus.PrometheusConfig;
 import io.micrometer.prometheus.PrometheusMeterRegistry;
 
 /**
- * Custom Provider implementation for {@link PrometheusMeterRegistry}.
- *
+ * Provider creating and configuring a singleton {@link PrometheusMeterRegistry} for the monitoring module.
+ * Applies URI whitelist filtering and SLO histogram configuration, then binds selected metric binders.
+ * <p><strong>Purpose</strong></p>
+ * Centralizes registry instantiation to ensure consistent filters and bound meters across the application.
+ * <p><strong>Main Functionality</strong></p>
+ * Constructs registry with default Prometheus configuration, applies HTTP URI whitelist filter, applies request
+ * latency histogram SLO buckets and registers configured meter binders based on module configuration.
+ * <p><strong>Key Features</strong></p>
+ * <ul>
+ * <li>HTTP URI whitelist to limit cardinality.</li>
+ * <li>Service level objective (SLO) latency buckets for request timing.</li>
+ * <li>Dynamic metric binder selection from module configuration.</li>
+ * </ul>
+ * <p><strong>Usage Preconditions</strong></p>
+ * Monitoring module must provide a non-null Prometheus configuration with optional HTTP metrics config; metric ids must map to {@link Metric} enum constants for successful binding.
+ * <p><strong>Null and Error Handling</strong></p>
+ * Missing or invalid metric ids are logged and skipped. Reflection errors during binder instantiation are logged.
+ * <p><strong>Thread-Safety</strong></p>
+ * Provider is stateless aside from injected module reference; registry returned is thread-safe for concurrent metric operations.
+ * <p><strong>Usage Example</strong></p>
+ * <pre>{@code
+ * PrometheusMeterRegistry registry = provider.get();
+ * }</pre>
  * @author Soenke Schmidt - IBM iX
- * @since 03.01.2023
- *
+ * @since 2023-01-03
  */
 public class PrometheusMeterRegistryProvider implements Provider<PrometheusMeterRegistry> {
 
@@ -54,11 +74,19 @@ public class PrometheusMeterRegistryProvider implements Provider<PrometheusMeter
 
     private final MonitoringModule _monitoringModule;
 
+    /**
+     * Constructs provider with monitoring module dependency.
+     * @param monitoringModule monitoring module providing configuration
+     */
     @Inject
     public PrometheusMeterRegistryProvider(MonitoringModule monitoringModule) {
         _monitoringModule = monitoringModule;
     }
 
+    /**
+     * Supplies configured Prometheus meter registry instance.
+     * @return configured registry
+     */
     @Override
     public PrometheusMeterRegistry get() {
         PrometheusMeterRegistry registry = new PrometheusMeterRegistry(PrometheusConfig.DEFAULT);
@@ -70,10 +98,10 @@ public class PrometheusMeterRegistryProvider implements Provider<PrometheusMeter
         return registry;
     }
 
-    protected de.ibmix.magkit.monitoring.config.prometheus.PrometheusConfig config() {
-        return _monitoringModule.getPrometheusConfig();
-    }
-
+    /**
+     * Binds configured metric binders to the registry.
+     * @param registry target registry
+     */
     protected void bindMetrics(MeterRegistry registry) {
         List<String> metricIds = getMetricIds();
         for (String metricId : metricIds) {
@@ -88,6 +116,10 @@ public class PrometheusMeterRegistryProvider implements Provider<PrometheusMeter
         }
     }
 
+    /**
+     * Meter filter that whitelists configured HTTP request URIs, blanking others to reduce cardinality.
+     * @return meter filter
+     */
     protected MeterFilter httpWhitelistUriFilter() {
         return new MeterFilter() {
             @Override
@@ -106,6 +138,10 @@ public class PrometheusMeterRegistryProvider implements Provider<PrometheusMeter
         };
     }
 
+    /**
+     * Meter filter applying SLO histogram buckets to HTTP request timers.
+     * @return meter filter
+     */
     protected MeterFilter requestHistogramFilter() {
         return new MeterFilter() {
             @Override
@@ -127,14 +163,26 @@ public class PrometheusMeterRegistryProvider implements Provider<PrometheusMeter
         };
     }
 
+    /**
+     * Returns configured metric identifier list.
+     * @return list of metric ids
+     */
     protected List<String> getMetricIds() {
         return _monitoringModule.getPrometheusConfig().getMetrics();
     }
 
+    /**
+     * Returns whitelist URI regex patterns.
+     * @return list of URI patterns
+     */
     protected List<String> getWhitelistUris() {
         return _monitoringModule.getPrometheusConfig().getHttpRequestMetricsConfig().getUris();
     }
 
+    /**
+     * Returns HTTP request SLO bucket boundaries in milliseconds.
+     * @return list of SLO bucket ms values
+     */
     protected List<Integer> getSloBuckets() {
         return _monitoringModule.getPrometheusConfig().getHttpRequestMetricsConfig().getSloBuckets();
     }

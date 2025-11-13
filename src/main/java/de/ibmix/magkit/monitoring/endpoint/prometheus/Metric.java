@@ -35,12 +35,29 @@ import io.micrometer.core.instrument.binder.system.ProcessorMetrics;
 import io.micrometer.core.instrument.binder.system.UptimeMetrics;
 
 /**
- *
- * Enum of available Metric Binders.
- *
+ * Enumeration of supported Prometheus/Micrometer metric binder types exposed by the prometheus endpoint.
+ * Each enum constant couples a stable identifier with a Micrometer {@link io.micrometer.core.instrument.binder.MeterBinder} implementation class.
+ * <p><strong>Purpose</strong></p>
+ * Provides lookup and reflective instantiation of meter binders based on configured metric id strings.
+ * <p><strong>Main Functionality</strong></p>
+ * Supplies id string via {@link #getId()}, binder class via {@link #getMeterBinderClass()}, reflective instance creation via {@link #getBinderInstance()} and reverse lookup via {@link #getById(String)}.
+ * <p><strong>Key Features</strong></p>
+ * <ul>
+ * <li>Case-insensitive id matching.</li>
+ * <li>Reflective creation of binder instance.</li>
+ * </ul>
+ * <p><strong>Null and Error Handling</strong></p>
+ * <code>getById</code> returns empty Optional if id not recognized. <code>getBinderInstance</code> throws ReflectiveOperationException on construction failure.
+ * <p><strong>Thread-Safety</strong></p>
+ * Enum instances are immutable and thread-safe; reflective instantiation may incur overhead.
+ * <p><strong>Usage Example</strong></p>
+ * <pre>{@code
+ * Metric.getById("JvmMemory").ifPresent(m -> m.getBinderInstance().bindTo(registry));
+ * }</pre>
+ * <p><strong>Important Details</strong></p>
+ * Binder classes must provide a public no-args constructor; otherwise reflective instantiation fails.
  * @author Soenke Schmidt - IBM iX
- * @since 04.01.2023
- *
+ * @since 2023-01-04
  */
 public enum Metric {
 
@@ -63,18 +80,36 @@ public enum Metric {
         _meterBinderClass = meterBinderClass;
     }
 
+    /**
+     * Returns stable identifier for this metric binder.
+     * @return id string
+     */
     public String getId() {
         return _id;
     }
 
+    /**
+     * Returns binder implementation class.
+     * @return binder class type
+     */
     public Class<? extends MeterBinder> getMeterBinderClass() {
         return _meterBinderClass;
     }
 
+    /**
+     * Reflectively creates a new binder instance.
+     * @return new meter binder
+     * @throws ReflectiveOperationException if construction fails
+     */
     public MeterBinder getBinderInstance() throws ReflectiveOperationException {
         return _meterBinderClass.getConstructor().newInstance();
     }
 
+    /**
+     * Looks up a Metric enum constant by id (case-insensitive).
+     * @param id configured id string
+     * @return optional metric constant
+     */
     public static Optional<Metric> getById(String id) {
         for (var smb : Metric.values()) {
             if (smb.getId().equalsIgnoreCase(id)) {
