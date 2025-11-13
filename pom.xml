@@ -12,7 +12,10 @@
 
     <properties>
         <version.micrometer.registry.prometheus>1.10.5</version.micrometer.registry.prometheus>
-        <version.magnolia.license>1.7.1</version.magnolia.license>
+        <!-- Magnolia module versions as used with Magnolia 6.2.45 -->
+        <version.magnolia.license>1.8.0</version.magnolia.license>
+        <version.magnolia.about>6.2.20</version.magnolia.about>
+        <version.magnolia.rest>2.2.26</version.magnolia.rest>
         <version.junit.jupiter>5.14.0</version.junit.jupiter>
         <version.surefire>3.3.0</version.surefire>
         <version.mockito>5.20.0</version.mockito>
@@ -42,6 +45,8 @@
         <dependency>
             <groupId>info.magnolia.about</groupId>
             <artifactId>magnolia-about-app</artifactId>
+            <version>${version.magnolia.about}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>info.magnolia</groupId>
@@ -52,6 +57,8 @@
         <dependency>
             <groupId>info.magnolia.rest</groupId>
             <artifactId>magnolia-rest-services</artifactId>
+            <version>${version.magnolia.rest}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
