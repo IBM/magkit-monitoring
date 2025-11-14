@@ -86,7 +86,7 @@ public class SchedulerService {
      * @return list of enabled job info objects; empty list if no jobs are enabled.
      */
     public List<JobInfo> getEnabledJobs() {
-        List<JobInfo> scheduledJobs = new ArrayList<JobInfo>();
+        List<JobInfo> scheduledJobs = new ArrayList<>();
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
