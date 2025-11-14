@@ -93,7 +93,10 @@ public class SchedulerServiceTest {
         Mockito.when(invalid.getDescription()).thenReturn("Broken job");
         Mockito.when(schedulerModule.getJobs()).thenReturn(Collections.singletonList(invalid));
         SchedulerService service = new SchedulerService(schedulerModule);
-        assertThrows(Exception.class, service::getEnabledJobs);
+        List<JobInfo> jobList = service.getEnabledJobs();
+        assertEquals(1, jobList.size());
+        assertEquals("invalid cron", jobList.get(0).getCron());
+        assertEquals("Invalid cron expression: 'invalid cron'. - Illegal characters for this position: 'INV'", jobList.get(0).getNextExecution());
     }
 
     /**
