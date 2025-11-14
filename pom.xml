@@ -7,7 +7,7 @@
     </parent>
 
     <artifactId>magkit-monitoring</artifactId>
-    <version>1.2.0-SNAPSHOT</version>
+    <version>1.2.1-SNAPSHOT</version>
     <name>IBM iX Magnolia Monitoring</name>
 
     <properties>

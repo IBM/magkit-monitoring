@@ -50,7 +50,7 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
  * <p><strong>Usage Preconditions</strong></p>
  * Magnolia {@link info.magnolia.module.scheduler.SchedulerModule} must be active and injected.
  * <p><strong>Null and Error Handling</strong></p>
- * Throws an {@link Exception} when cron parsing fails; caller maps errors to HTTP responses.
+ * When cron parsing fails, the error message is added to the 'nextExecution' field.
  * <p><strong>Thread-Safety</strong></p>
  * Stateless aside from reference to injected module; safe for concurrent access.
  * <p><strong>Side Effects</strong></p>
@@ -84,10 +84,9 @@ public class SchedulerService {
      * <p>Cron expressions are parsed using Quartz; invalid expressions result in an {@link Exception}.</p>
      *
      * @return list of enabled job info objects; empty list if no jobs are enabled.
-     * @throws Exception if a cron expression cannot be parsed or next execution time cannot be determined.
      */
     public List<JobInfo> getEnabledJobs() {
-        List<JobInfo> scheduledJobs = new ArrayList<JobInfo>();
+        List<JobInfo> scheduledJobs = new ArrayList<>();
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
