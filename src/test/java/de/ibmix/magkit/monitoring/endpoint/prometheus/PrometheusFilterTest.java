@@ -35,12 +35,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import io.micrometer.prometheusmetrics.PrometheusMeterRegistry;
 import org.junit.jupiter.api.Test;
 
 import de.ibmix.magkit.monitoring.MonitoringModule;
 import de.ibmix.magkit.monitoring.config.prometheus.HttpRequestMetricsConfig;
 import de.ibmix.magkit.monitoring.config.prometheus.PrometheusConfig;
-import io.micrometer.prometheus.PrometheusMeterRegistry;
 
 /**
  * Unit tests for {@link PrometheusFilter} covering conditional activation and tag generation.
@@ -63,7 +63,7 @@ public class PrometheusFilterTest {
         prometheusConfig.setHttpRequestMetricsConfig(httpCfg);
         MonitoringModule module = mock(MonitoringModule.class);
         when(module.getPrometheusConfig()).thenReturn(prometheusConfig);
-        PrometheusMeterRegistry registry = new PrometheusMeterRegistry(io.micrometer.prometheus.PrometheusConfig.DEFAULT);
+        PrometheusMeterRegistry registry = new PrometheusMeterRegistry(io.micrometer.prometheusmetrics.PrometheusConfig.DEFAULT);
         PrometheusFilter filter = new PrometheusFilter(module, registry);
         HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);
@@ -89,7 +89,7 @@ public class PrometheusFilterTest {
         prometheusConfig.setHttpRequestMetricsConfig(httpCfg);
         MonitoringModule module = mock(MonitoringModule.class);
         when(module.getPrometheusConfig()).thenReturn(prometheusConfig);
-        PrometheusMeterRegistry registry = new PrometheusMeterRegistry(io.micrometer.prometheus.PrometheusConfig.DEFAULT);
+        PrometheusMeterRegistry registry = new PrometheusMeterRegistry(io.micrometer.prometheusmetrics.PrometheusConfig.DEFAULT);
         PrometheusFilter filter = new PrometheusFilter(module, registry);
         HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);

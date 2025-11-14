@@ -34,7 +34,7 @@ import info.magnolia.cms.filters.AbstractMgnlFilter;
 import io.micrometer.core.instrument.Tag;
 import io.micrometer.core.instrument.Tags;
 import io.micrometer.core.instrument.Timer;
-import io.micrometer.prometheus.PrometheusMeterRegistry;
+import io.micrometer.prometheusmetrics.PrometheusMeterRegistry;
 
 /**
  * Servlet filter capturing HTTP request metrics and recording them into a Prometheus meter registry.

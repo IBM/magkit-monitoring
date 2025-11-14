@@ -27,6 +27,7 @@ import static org.mockito.Mockito.when;
 import java.time.Duration;
 import java.util.List;
 
+import io.micrometer.prometheusmetrics.PrometheusMeterRegistry;
 import org.junit.jupiter.api.Test;
 
 import de.ibmix.magkit.monitoring.MonitoringModule;
@@ -35,7 +36,6 @@ import de.ibmix.magkit.monitoring.config.prometheus.PrometheusConfig;
 import io.micrometer.core.instrument.Tag;
 import io.micrometer.core.instrument.Timer;
 import io.micrometer.core.instrument.Tags;
-import io.micrometer.prometheus.PrometheusMeterRegistry;
 
 /**
  * Unit tests for {@link PrometheusMeterRegistryProvider} covering HTTP whitelist filter and SLO histogram configuration.

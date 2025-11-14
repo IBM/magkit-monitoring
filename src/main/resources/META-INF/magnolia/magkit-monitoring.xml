@@ -30,7 +30,7 @@
   <components>
     <id>main</id>
     <component>
-      <type>io.micrometer.prometheus.PrometheusMeterRegistry</type>
+      <type>io.micrometer.prometheusmetrics.PrometheusMeterRegistry</type>
       <provider>de.ibmix.magkit.monitoring.endpoint.prometheus.PrometheusMeterRegistryProvider</provider>
       <scope>singleton</scope>
     </component>

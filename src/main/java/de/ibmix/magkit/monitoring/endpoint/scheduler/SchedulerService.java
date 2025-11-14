@@ -20,6 +20,7 @@ package de.ibmix.magkit.monitoring.endpoint.scheduler;
  * #L%
  */
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,6 +32,8 @@ import org.quartz.CronExpression;
 
 import info.magnolia.module.scheduler.JobDefinition;
 import info.magnolia.module.scheduler.SchedulerModule;
+
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 /**
  * Service layer component providing enabled scheduled job metadata for the scheduler monitoring endpoint.
@@ -83,7 +86,7 @@ public class SchedulerService {
      * @return list of enabled job info objects; empty list if no jobs are enabled.
      * @throws Exception if a cron expression cannot be parsed or next execution time cannot be determined.
      */
-    public List<JobInfo> getEnabledJobs() throws Exception {
+    public List<JobInfo> getEnabledJobs() {
         List<JobInfo> scheduledJobs = new ArrayList<JobInfo>();
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
@@ -93,17 +96,26 @@ public class SchedulerService {
                 JobInfo jobInfo = new JobInfo();
 
                 String cronExpression = job.getCron();
-                CronExpression cron = new CronExpression(cronExpression);
-                Date nextExecution = cron.getNextValidTimeAfter(new Date());
-
                 jobInfo.setName(job.getName());
                 jobInfo.setDescription(job.getDescription());
                 jobInfo.setCron(cronExpression);
-                jobInfo.setNextExecution(formatter.format(nextExecution));
+                jobInfo.setNextExecution(getNextExecution(cronExpression, formatter));
                 scheduledJobs.add(jobInfo);
             }
         }
 
         return scheduledJobs;
+    }
+
+    String getNextExecution(String cronExpression, SimpleDateFormat formatter) {
+        String result = EMPTY;
+        try {
+            CronExpression cron = new CronExpression(cronExpression);
+            Date nextExecution = cron.getNextValidTimeAfter(new Date());
+            result =  formatter.format(nextExecution);
+        } catch (ParseException e) {
+            result = "Invalid cron expression: '" + cronExpression + "'. - " + e.getMessage();
+        }
+        return result;
     }
 }

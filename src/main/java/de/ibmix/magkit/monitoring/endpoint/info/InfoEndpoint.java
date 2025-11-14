@@ -21,7 +21,7 @@ package de.ibmix.magkit.monitoring.endpoint.info;
  */
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 
 import javax.inject.Inject;
 
@@ -79,6 +79,7 @@ public class InfoEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpointD
 
     private static final String AUTHOR = "author";
     private static final String PUBLIC = "public";
+    private static final DateTimeFormatter YYYY_MM_DD = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     private final InstanceConfigurationProvider _configurationProvider;
     private final LicenseManager _licenseManager;
@@ -106,7 +107,6 @@ public class InfoEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpointD
     @Path("")
     @Produces(MediaType.APPLICATION_JSON)
     public Info info() throws IOException {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Info info = new Info();
         Magnolia magnolia = new Magnolia();
         License license = new License();
@@ -118,7 +118,7 @@ public class InfoEndpoint extends AbstractMonitoringEndpoint<MonitoringEndpointD
 
         info.magnolia.license.License magnoliaLicense = _licenseManager.getLicense(LicenseConsts.MODULE_ENTERPRISE);
         license.setOwner(magnoliaLicense.getOwner());
-        license.setExpirationDate(formatter.format(magnoliaLicense.getExpirationDate()));
+        license.setExpirationDate(magnoliaLicense.getValidityEndDate().format(YYYY_MM_DD));
         magnolia.setLicense(license);
 
         environment.setOperatingSystem(System.getProperty("os.name"));

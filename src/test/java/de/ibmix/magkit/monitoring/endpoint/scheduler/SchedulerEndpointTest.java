@@ -71,13 +71,13 @@ public class SchedulerEndpointTest {
     public void testGetScheduledJobsError() throws Exception {
         MonitoringEndpointDefinition def = Mockito.mock(MonitoringEndpointDefinition.class);
         SchedulerService service = Mockito.mock(SchedulerService.class);
-        Mockito.when(service.getEnabledJobs()).thenThrow(new Exception("Failed cron"));
+        Mockito.when(service.getEnabledJobs()).thenThrow(new RuntimeException("Something wild is going on."));
         SchedulerEndpoint endpoint = new SchedulerEndpoint(def, service);
         Response response = endpoint.getScheduledJobs();
         assertEquals(400, response.getStatus());
         Object entity = response.getEntity();
         assertTrue(entity instanceof String);
-        assertTrue(((String) entity).startsWith("An error occurred: Failed cron"));
+        assertEquals("An error occurred: Something wild is going on.", (String) entity);
     }
 }
 
