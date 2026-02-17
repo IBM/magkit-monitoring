@@ -19,7 +19,7 @@
         <version.surefire>3.3.0</version.surefire>
         <version.mockito>5.20.0</version.mockito>
         <version.bytebuddy>1.14.18</version.bytebuddy>
-        <version.magkit.test>1.0.10</version.magkit.test>
+        <version.magkit.test>1.1.0</version.magkit.test>
     </properties>
 
     <!-- Import JUnit BOM to ensure consistent platform module versions -->
