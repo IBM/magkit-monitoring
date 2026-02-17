@@ -17,7 +17,7 @@
         <!-- Test dependencies -->
         <version.junit.jupiter>5.14.3</version.junit.jupiter>
         <version.surefire>3.3.0</version.surefire>
-        <version.mockito>5.20.0</version.mockito>
+        <version.mockito>5.21.0</version.mockito>
         <version.bytebuddy>1.14.18</version.bytebuddy>
         <version.magkit.test>1.0.10</version.magkit.test>
     </properties>
