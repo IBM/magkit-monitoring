@@ -20,17 +20,15 @@ package de.ibmix.magkit.monitoring.endpoint.prometheus;
  * #L%
  */
 
-import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
 import de.ibmix.magkit.monitoring.endpoint.AbstractMonitoringEndpoint;
 import de.ibmix.magkit.monitoring.endpoint.MonitoringEndpointDefinition;
-
 import info.magnolia.rest.DynamicPath;
 import io.micrometer.prometheusmetrics.PrometheusMeterRegistry;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
 
 /**
  * REST endpoint exposing Prometheus formatted metrics scraped from the application's registry.

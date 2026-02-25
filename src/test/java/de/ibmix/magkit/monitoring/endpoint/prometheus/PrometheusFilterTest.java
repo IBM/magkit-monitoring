@@ -19,6 +19,19 @@
  */
 package de.ibmix.magkit.monitoring.endpoint.prometheus;
 
+import de.ibmix.magkit.monitoring.MonitoringModule;
+import de.ibmix.magkit.monitoring.config.prometheus.HttpRequestMetricsConfig;
+import de.ibmix.magkit.monitoring.config.prometheus.PrometheusConfig;
+import io.micrometer.prometheusmetrics.PrometheusMeterRegistry;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -26,21 +39,6 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-import java.io.IOException;
-import java.util.List;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import io.micrometer.prometheusmetrics.PrometheusMeterRegistry;
-import org.junit.jupiter.api.Test;
-
-import de.ibmix.magkit.monitoring.MonitoringModule;
-import de.ibmix.magkit.monitoring.config.prometheus.HttpRequestMetricsConfig;
-import de.ibmix.magkit.monitoring.config.prometheus.PrometheusConfig;
 
 /**
  * Unit tests for {@link PrometheusFilter} covering conditional activation and tag generation.

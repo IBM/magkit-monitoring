@@ -20,26 +20,23 @@ package de.ibmix.magkit.monitoring.endpoint.prometheus;
  * #L%
  */
 
-import java.time.Duration;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import javax.inject.Inject;
-import javax.inject.Provider;
-
-import io.micrometer.prometheusmetrics.PrometheusConfig;
-import io.micrometer.prometheusmetrics.PrometheusMeterRegistry;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import de.ibmix.magkit.monitoring.MonitoringModule;
-
 import io.micrometer.core.instrument.Meter.Id;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tag;
 import io.micrometer.core.instrument.config.MeterFilter;
 import io.micrometer.core.instrument.distribution.DistributionStatisticConfig;
+import io.micrometer.prometheusmetrics.PrometheusConfig;
+import io.micrometer.prometheusmetrics.PrometheusMeterRegistry;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.time.Duration;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Provider creating and configuring a singleton {@link PrometheusMeterRegistry} for the monitoring module.

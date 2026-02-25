@@ -20,26 +20,24 @@ package de.ibmix.magkit.monitoring.endpoint.modules;
  * #L%
  */
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
 import de.ibmix.magkit.monitoring.endpoint.AbstractMonitoringEndpoint;
 import de.ibmix.magkit.monitoring.endpoint.MonitoringEndpointDefinition;
-
 import info.magnolia.module.ModuleManagementException;
 import info.magnolia.module.ModuleRegistry;
 import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.reader.LightModuleDefinitionReader;
 import info.magnolia.rest.DynamicPath;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * REST endpoint exposing a list of all Magnolia modules (light and registered) with their resolved versions.

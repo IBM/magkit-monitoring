@@ -19,27 +19,25 @@
  */
 package de.ibmix.magkit.monitoring.endpoint.logs;
 
-import static de.ibmix.magkit.test.cms.context.ContextMockUtils.mockWebContext;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.List;
-
-import javax.jcr.RepositoryException;
-
+import de.ibmix.magkit.monitoring.endpoint.MonitoringEndpointDefinition;
 import de.ibmix.magkit.test.cms.context.ContextMockUtils;
+import info.magnolia.context.WebContext;
+import info.magnolia.init.MagnoliaConfigurationProperties;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import de.ibmix.magkit.monitoring.endpoint.MonitoringEndpointDefinition;
-import info.magnolia.context.WebContext;
-import info.magnolia.init.MagnoliaConfigurationProperties;
+import javax.jcr.RepositoryException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+
+import static de.ibmix.magkit.test.cms.context.ContextMockUtils.mockWebContext;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Unit tests for {@link LogsEndpoint} covering directory listing, error handling and log content retrieval.
@@ -85,7 +83,7 @@ public class LogsEndpointTest {
         MagnoliaConfigurationProperties props = Mockito.mock(MagnoliaConfigurationProperties.class);
         Mockito.when(props.getProperty("magnolia.logs.dir")).thenReturn(_tempLogDir.toString());
         LogsEndpoint endpoint = new LogsEndpoint(def, props);
-        try (javax.ws.rs.core.Response response = endpoint.availableLogs()) {
+        try (jakarta.ws.rs.core.Response response = endpoint.availableLogs()) {
             assertEquals(200, response.getStatus());
             Object entity = response.getEntity();
             assertTrue(entity instanceof java.util.List);
@@ -106,7 +104,7 @@ public class LogsEndpointTest {
         MagnoliaConfigurationProperties props = Mockito.mock(MagnoliaConfigurationProperties.class);
         Mockito.when(props.getProperty("magnolia.logs.dir")).thenReturn(_tempLogDir.resolve("missing").toString());
         LogsEndpoint endpoint = new LogsEndpoint(def, props);
-        try (javax.ws.rs.core.Response response = endpoint.availableLogs()) {
+        try (jakarta.ws.rs.core.Response response = endpoint.availableLogs()) {
             assertEquals(500, response.getStatus());
             assertNotNull(response.getEntity());
         }
@@ -121,7 +119,7 @@ public class LogsEndpointTest {
         MagnoliaConfigurationProperties props = Mockito.mock(MagnoliaConfigurationProperties.class);
         Mockito.when(props.getProperty("magnolia.logs.dir")).thenReturn(_tempLogDir.toString());
         LogsEndpoint endpoint = new LogsEndpoint(def, props);
-        try (javax.ws.rs.core.Response response = endpoint.logs("system")) {
+        try (jakarta.ws.rs.core.Response response = endpoint.logs("system")) {
             assertEquals(200, response.getStatus());
             Object entity = response.getEntity();
             assertTrue(entity instanceof StringBuilder);
@@ -139,7 +137,7 @@ public class LogsEndpointTest {
         MagnoliaConfigurationProperties props = Mockito.mock(MagnoliaConfigurationProperties.class);
         Mockito.when(props.getProperty("magnolia.logs.dir")).thenReturn(_tempLogDir.toString());
         LogsEndpoint endpoint = new LogsEndpoint(def, props);
-        try (javax.ws.rs.core.Response response = endpoint.logs("access.log")) {
+        try (jakarta.ws.rs.core.Response response = endpoint.logs("access.log")) {
             assertEquals(200, response.getStatus());
             String content = response.getEntity().toString();
             assertTrue(content.contains("a1\r\na2\r\n"));
@@ -155,7 +153,7 @@ public class LogsEndpointTest {
         MagnoliaConfigurationProperties props = Mockito.mock(MagnoliaConfigurationProperties.class);
         Mockito.when(props.getProperty("magnolia.logs.dir")).thenReturn(_tempLogDir.toString());
         LogsEndpoint endpoint = new LogsEndpoint(def, props);
-        try (javax.ws.rs.core.Response response = endpoint.logs("SyStEm.LoG")) {
+        try (jakarta.ws.rs.core.Response response = endpoint.logs("SyStEm.LoG")) {
             assertEquals(200, response.getStatus());
             String content = response.getEntity().toString();
             assertTrue(content.contains("line1\r\nline2\r\n"));
@@ -171,7 +169,7 @@ public class LogsEndpointTest {
         MagnoliaConfigurationProperties props = Mockito.mock(MagnoliaConfigurationProperties.class);
         Mockito.when(props.getProperty("magnolia.logs.dir")).thenReturn(_tempLogDir.toString());
         LogsEndpoint endpoint = new LogsEndpoint(def, props);
-        try (javax.ws.rs.core.Response response = endpoint.logs("unknown")) {
+        try (jakarta.ws.rs.core.Response response = endpoint.logs("unknown")) {
             assertEquals(400, response.getStatus());
         }
     }
@@ -200,7 +198,7 @@ public class LogsEndpointTest {
         MagnoliaConfigurationProperties props = Mockito.mock(MagnoliaConfigurationProperties.class);
         Mockito.when(props.getProperty("magnolia.logs.dir")).thenReturn(emptyDir.toString());
         LogsEndpoint endpoint = new LogsEndpoint(def, props);
-        try (javax.ws.rs.core.Response response = endpoint.availableLogs()) {
+        try (jakarta.ws.rs.core.Response response = endpoint.availableLogs()) {
             assertEquals(200, response.getStatus());
             Object entity = response.getEntity();
             assertTrue(entity instanceof java.util.List);
@@ -228,7 +226,7 @@ public class LogsEndpointTest {
         MagnoliaConfigurationProperties props = Mockito.mock(MagnoliaConfigurationProperties.class);
         Mockito.when(props.getProperty("magnolia.logs.dir")).thenReturn(_tempLogDir.toString());
         LogsEndpoint endpoint = new LogsEndpoint(def, props);
-        try (javax.ws.rs.core.Response response = endpoint.logs("doesNotExist")) {
+        try (jakarta.ws.rs.core.Response response = endpoint.logs("doesNotExist")) {
             assertEquals(400, response.getStatus());
             assertEquals("The specified log file couldn't be found!", response.getEntity());
         }
@@ -243,7 +241,7 @@ public class LogsEndpointTest {
         MagnoliaConfigurationProperties props = Mockito.mock(MagnoliaConfigurationProperties.class);
         Mockito.when(props.getProperty("magnolia.logs.dir")).thenReturn(_tempLogDir.toString());
         LogsEndpoint endpoint = new LogsEndpoint(def, props);
-        try (javax.ws.rs.core.Response response = endpoint.logs("system.log")) {
+        try (jakarta.ws.rs.core.Response response = endpoint.logs("system.log")) {
             assertEquals(200, response.getStatus());
             String content = response.getEntity().toString();
             assertTrue(content.endsWith("\r\n"));

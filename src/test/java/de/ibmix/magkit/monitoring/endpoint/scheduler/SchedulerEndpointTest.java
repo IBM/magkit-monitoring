@@ -19,19 +19,17 @@
  */
 package de.ibmix.magkit.monitoring.endpoint.scheduler;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import de.ibmix.magkit.monitoring.endpoint.MonitoringEndpointDefinition;
+import jakarta.ws.rs.core.Response;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.util.Collections;
 import java.util.List;
 
-import javax.ws.rs.core.Response;
-
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-
-import de.ibmix.magkit.monitoring.endpoint.MonitoringEndpointDefinition;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Unit tests for {@link SchedulerEndpoint} covering successful retrieval and error mapping to HTTP 400.

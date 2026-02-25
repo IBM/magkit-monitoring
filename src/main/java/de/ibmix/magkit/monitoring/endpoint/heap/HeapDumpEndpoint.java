@@ -20,26 +20,23 @@ package de.ibmix.magkit.monitoring.endpoint.heap;
  * #L%
  */
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.management.ManagementFactory;
-
-import javax.inject.Inject;
-import javax.management.MBeanServer;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
+import com.sun.management.HotSpotDiagnosticMXBean;
 import de.ibmix.magkit.monitoring.endpoint.AbstractMonitoringEndpoint;
 import de.ibmix.magkit.monitoring.endpoint.MonitoringEndpointDefinition;
+import info.magnolia.rest.DynamicPath;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.sun.management.HotSpotDiagnosticMXBean;
-
-import info.magnolia.rest.DynamicPath;
+import javax.management.MBeanServer;
+import java.io.File;
+import java.io.IOException;
+import java.lang.management.ManagementFactory;
 
 /**
  * REST endpoint producing a JVM heap dump file for offline memory analysis.

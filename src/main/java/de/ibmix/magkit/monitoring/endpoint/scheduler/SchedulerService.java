@@ -20,18 +20,16 @@ package de.ibmix.magkit.monitoring.endpoint.scheduler;
  * #L%
  */
 
+import info.magnolia.module.scheduler.JobDefinition;
+import info.magnolia.module.scheduler.SchedulerModule;
+import jakarta.inject.Inject;
+import org.quartz.CronExpression;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import javax.inject.Inject;
-
-import org.quartz.CronExpression;
-
-import info.magnolia.module.scheduler.JobDefinition;
-import info.magnolia.module.scheduler.SchedulerModule;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 

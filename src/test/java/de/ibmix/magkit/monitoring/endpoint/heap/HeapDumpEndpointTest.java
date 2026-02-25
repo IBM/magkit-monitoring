@@ -20,20 +20,19 @@ package de.ibmix.magkit.monitoring.endpoint.heap;
  * #L%
  */
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.management.ManagementFactory;
-import javax.management.MBeanServer;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
+import com.sun.management.HotSpotDiagnosticMXBean;
 import de.ibmix.magkit.monitoring.endpoint.MonitoringEndpointDefinition;
-import org.junit.jupiter.api.Test;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
-import com.sun.management.HotSpotDiagnosticMXBean;
+import javax.management.MBeanServer;
+import java.io.File;
+import java.io.IOException;
+import java.lang.management.ManagementFactory;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;

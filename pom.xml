@@ -1,9 +1,10 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>de.ibmix.magkit</groupId>
         <artifactId>magkit-pom</artifactId>
-        <version>1.1.0</version>
+        <version>1.2.0</version>
     </parent>
 
     <artifactId>magkit-monitoring</artifactId>
@@ -11,35 +12,24 @@
     <name>IBM iX Magnolia Monitoring</name>
 
     <properties>
-        <!-- Magnolia module versions as used with Magnolia 6.3.17. -->
-        <version.magnolia>6.3.17</version.magnolia>
-        <version.magnolia.license>2.0.2</version.magnolia.license>
+        <!-- Magnolia version from super pom, upgrade if needed -->
+        <!--version.magnolia>6.4.2</version.magnolia-->
+
+        <!-- keep in sync with the Magnolia version -->
+        <version.magnolia.license>3.0.0</version.magnolia.license>
         <!-- Test dependencies -->
-        <version.junit.jupiter>5.14.3</version.junit.jupiter>
         <version.surefire>3.3.0</version.surefire>
-        <version.mockito>5.20.0</version.mockito>
         <version.bytebuddy>1.14.18</version.bytebuddy>
-        <version.magkit.test>1.0.10</version.magkit.test>
+        <version.magkit.test>1.2.0-SNAPSHOT</version.magkit.test>
     </properties>
 
-    <!-- Import JUnit BOM to ensure consistent platform module versions -->
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.junit</groupId>
-                <artifactId>junit-bom</artifactId>
-                <version>${version.junit.jupiter}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
-    <dependencies>
+     <dependencies>
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-prometheus</artifactId>
         </dependency>
+
+        <!-- Magnolia module dependencies -->
         <dependency>
             <groupId>info.magnolia.about</groupId>
             <artifactId>magnolia-about-app</artifactId>
@@ -56,11 +46,20 @@
             <artifactId>magnolia-rest-services</artifactId>
             <scope>provided</scope>
         </dependency>
+
+        <!-- Application container dependencies -->
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>jakarta.ws.rs</groupId>
+            <artifactId>jakarta.ws.rs-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Test dependencies -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
@@ -79,13 +78,11 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>${version.mockito}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
-            <version>${version.mockito}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
