@@ -20,15 +20,14 @@ package de.ibmix.magkit.monitoring.config.prometheus;
  * #L%
  */
 
-import static java.util.Collections.emptyList;
+import com.google.inject.Inject;
+import jakarta.inject.Named;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.inject.Named;
-
-import com.google.inject.Inject;
+import static java.util.Collections.emptyList;
 
 /**
  * Configuration bean aggregating HTTP request related metric settings used by the Prometheus scraper.

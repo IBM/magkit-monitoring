@@ -20,20 +20,18 @@ package de.ibmix.magkit.monitoring.endpoint.thread;
  * #L%
  */
 
+import de.ibmix.magkit.monitoring.endpoint.AbstractMonitoringEndpoint;
+import de.ibmix.magkit.monitoring.endpoint.MonitoringEndpointDefinition;
+import info.magnolia.rest.DynamicPath;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
-
-import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
-import de.ibmix.magkit.monitoring.endpoint.AbstractMonitoringEndpoint;
-import de.ibmix.magkit.monitoring.endpoint.MonitoringEndpointDefinition;
-
-import info.magnolia.rest.DynamicPath;
 
 /**
  * REST endpoint producing a textual JVM thread dump for diagnostic purposes.

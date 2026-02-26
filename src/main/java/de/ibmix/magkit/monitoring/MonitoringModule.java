@@ -20,15 +20,12 @@ package de.ibmix.magkit.monitoring;
  * #L%
  */
 
-import javax.inject.Inject;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import de.ibmix.magkit.monitoring.config.prometheus.PrometheusConfig;
-
 import info.magnolia.module.ModuleLifecycle;
 import info.magnolia.module.ModuleLifecycleContext;
+import jakarta.inject.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Core Magnolia monitoring module lifecycle implementation.

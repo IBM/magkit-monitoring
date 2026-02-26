@@ -20,27 +20,24 @@ package de.ibmix.magkit.monitoring.endpoint.info;
  * #L%
  */
 
-import java.io.IOException;
-import java.time.format.DateTimeFormatter;
-
-import javax.inject.Inject;
-
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
 import de.ibmix.magkit.monitoring.endpoint.AbstractMonitoringEndpoint;
 import de.ibmix.magkit.monitoring.endpoint.MonitoringEndpointDefinition;
 import de.ibmix.magkit.monitoring.endpoint.info.pojo.Environment;
 import de.ibmix.magkit.monitoring.endpoint.info.pojo.Info;
 import de.ibmix.magkit.monitoring.endpoint.info.pojo.License;
 import de.ibmix.magkit.monitoring.endpoint.info.pojo.Magnolia;
-
 import info.magnolia.about.app.InstanceConfigurationProvider;
 import info.magnolia.license.LicenseConsts;
 import info.magnolia.license.LicenseManager;
 import info.magnolia.rest.DynamicPath;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+
+import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Provides aggregated runtime and license information about the running Magnolia instance.

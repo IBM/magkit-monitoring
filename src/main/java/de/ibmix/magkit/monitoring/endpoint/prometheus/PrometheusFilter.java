@@ -20,21 +20,19 @@ package de.ibmix.magkit.monitoring.endpoint.prometheus;
  * #L%
  */
 
-import java.io.IOException;
-
-import javax.inject.Inject;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import de.ibmix.magkit.monitoring.MonitoringModule;
-
 import info.magnolia.cms.filters.AbstractMgnlFilter;
 import io.micrometer.core.instrument.Tag;
 import io.micrometer.core.instrument.Tags;
 import io.micrometer.core.instrument.Timer;
 import io.micrometer.prometheusmetrics.PrometheusMeterRegistry;
+import jakarta.inject.Inject;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
 
 /**
  * Servlet filter capturing HTTP request metrics and recording them into a Prometheus meter registry.

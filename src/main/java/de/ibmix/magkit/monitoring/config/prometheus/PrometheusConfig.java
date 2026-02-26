@@ -20,12 +20,11 @@ package de.ibmix.magkit.monitoring.config.prometheus;
  * #L%
  */
 
+import com.google.inject.Inject;
+import jakarta.inject.Named;
+
 import java.util.Arrays;
 import java.util.List;
-
-import javax.inject.Named;
-
-import com.google.inject.Inject;
 
 /**
  * Central configuration bean for enabling and tailoring Prometheus metrics collection within Magnolia.

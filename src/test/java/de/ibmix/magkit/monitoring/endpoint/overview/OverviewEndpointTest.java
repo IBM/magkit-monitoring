@@ -19,33 +19,31 @@
  */
 package de.ibmix.magkit.monitoring.endpoint.overview;
 
-import static de.ibmix.magkit.test.cms.context.ContextMockUtils.mockWebContext;
-import static de.ibmix.magkit.test.servlet.HttpServletRequestStubbingOperation.stubRequestUri;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import de.ibmix.magkit.monitoring.endpoint.ConfiguredMonitoringEndpointDefinition;
+import de.ibmix.magkit.monitoring.endpoint.MonitoringEndpointDefinition;
+import de.ibmix.magkit.test.cms.context.ContextMockUtils;
+import info.magnolia.config.registry.DefinitionMetadata;
+import info.magnolia.config.registry.DefinitionProvider;
+import info.magnolia.context.WebContext;
+import info.magnolia.rest.EndpointDefinition;
+import info.magnolia.rest.registry.EndpointDefinitionRegistry;
+import jakarta.ws.rs.core.Response;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
+import javax.jcr.RepositoryException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.jcr.RepositoryException;
-import javax.ws.rs.core.Response;
-
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-
-import de.ibmix.magkit.monitoring.endpoint.ConfiguredMonitoringEndpointDefinition;
-import de.ibmix.magkit.monitoring.endpoint.MonitoringEndpointDefinition;
-import de.ibmix.magkit.test.cms.context.ContextMockUtils;
-import info.magnolia.context.WebContext;
-import info.magnolia.rest.EndpointDefinition;
-import info.magnolia.rest.registry.EndpointDefinitionRegistry;
-import info.magnolia.config.registry.DefinitionProvider;
-import info.magnolia.config.registry.DefinitionMetadata;
+import static de.ibmix.magkit.test.cms.context.ContextMockUtils.mockWebContext;
+import static de.ibmix.magkit.test.servlet.HttpServletRequestStubbingOperation.stubRequestUri;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Unit tests for {@link OverviewEndpoint} covering aggregation logic including version parsing, exclusion of self, path construction and bucket accumulation.
