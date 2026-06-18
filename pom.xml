@@ -20,7 +20,7 @@
         <!-- Test dependencies -->
         <version.surefire>3.5.5</version.surefire>
         <version.bytebuddy>1.14.18</version.bytebuddy>
-        <version.magkit.test>1.2.0-SNAPSHOT</version.magkit.test>
+        <version.magkit.test>1.2.0</version.magkit.test>
     </properties>
 
      <dependencies>
